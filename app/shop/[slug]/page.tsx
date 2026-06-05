@@ -90,21 +90,42 @@ useEffect(() => {
     </div>
   );
 
-  if (orderSuccess) return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "Tajawal, sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0}`}</style>
-      <div style={{ background: "#ffffff10", borderRadius: 24, padding: 32, maxWidth: 400, width: "100%", textAlign: "center", border: "1px solid #ffffff15" }}>
-        <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
-        <h2 style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 8 }}>تم الطلب بنجاح!</h2>
-        <p style={{ color: "#ffffff60", fontSize: 13, marginBottom: 20 }}>سيتواصل معك المتجر على واتساب للتأكيد</p>
-        <div style={{ background: "#ec489922", border: "2px solid #ec4899", borderRadius: 14, padding: "14px 20px", marginBottom: 24 }}>
-          <div style={{ fontSize: 11, color: "#ffffff60", marginBottom: 4 }}>رقم طلبك</div>
-          <div style={{ fontSize: 26, fontWeight: 900, color: "#ec4899", letterSpacing: 2 }}>{orderNumber}</div>
-        </div>
-        <button onClick={() => setOrderSuccess(false)} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>🛍️ تسوق مجدداً</button>
+if (orderSuccess) return (
+  <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "Tajawal, sans-serif" }}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0}`}</style>
+    <div style={{ background: "#ffffff10", borderRadius: 24, padding: 32, maxWidth: 420, width: "100%", textAlign: "center", border: "1px solid #ffffff15" }}>
+      <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
+      <h2 style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 8 }}>تم الطلب بنجاح!</h2>
+      <p style={{ color: "#ffffff60", fontSize: 13, marginBottom: 20 }}>سيتواصل معك المتجر على واتساب للتأكيد</p>
+      <div style={{ background: "#ec489922", border: "2px solid #ec4899", borderRadius: 14, padding: "14px 20px", marginBottom: 20 }}>
+        <div style={{ fontSize: 11, color: "#ffffff60", marginBottom: 4 }}>رقم طلبك</div>
+        <div style={{ fontSize: 26, fontWeight: 900, color: "#ec4899", letterSpacing: 2 }}>{orderNumber}</div>
       </div>
+      <div style={{ background: "#ffffff10", borderRadius: 14, padding: 16, marginBottom: 20, textAlign: "right" }}>
+        <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 10, fontSize: 14 }}>📋 تفاصيل طلبك</h4>
+        {cart.length === 0 ? null : cart.map((item, i) => (
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #ffffff10" }}>
+            <span style={{ fontSize: 13, color: "#e2e8f0" }}>{item.name} x{item.qty}</span>
+            <span style={{ fontSize: 13, color: "#ec4899", fontWeight: 700 }}>{(item.price * item.qty).toLocaleString()} د.ع</span>
+          </div>
+        ))}
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}>
+          <span style={{ fontWeight: 700, color: "#fff" }}>المجموع</span>
+          <span style={{ fontWeight: 900, color: "#ec4899", fontSize: 16 }}>{total.toLocaleString()} د.ع</span>
+        </div>
+      </div>
+      <button onClick={() => {
+        const msg = `🛍️ طلب جديد!\nرقم الطلب: ${orderNumber}\nالاسم: ${customerName}\nالهاتف: ${customerPhone}\nالعنوان: ${customerAddress}\nالمجموع: ${total.toLocaleString()} د.ع`;
+        window.open(`https://wa.me/${seller.phone?.replace(/^0/, "964")}?text=${encodeURIComponent(msg)}`, "_blank");
+      }} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#25d366,#128c7e)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }}>
+        💬 تواصل عبر واتساب
+      </button>
+      <button onClick={() => window.location.href = `/shop/${slug}?shop=1`} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+        🛍️ تسوق مجدداً
+      </button>
     </div>
-  );
+  </div>
+);
 
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", color: "#e2e8f0", fontFamily: "'Tajawal','Cairo',sans-serif", paddingBottom: 100 }}>
