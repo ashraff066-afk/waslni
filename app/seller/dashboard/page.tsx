@@ -36,6 +36,8 @@ const [settingsSaved, setSettingsSaved] = useState(false);
     if (!user) { window.location.href = "/seller"; return; }
     const { data: sellerData } = await supabase.from("sellers").select("*").eq("user_id", user.id).single();
     if (!sellerData) { window.location.href = "/seller"; return; }
+    const daysLeft = sellerData.subscription_end ? Math.ceil((new Date(sellerData.subscription_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
+if (daysLeft <= 0) { window.location.href = "/seller/expired"; return; }
     setSeller(sellerData);
     setSettingsName(sellerData.business_name || "");
 setSettingsPhone(sellerData.phone || "");
@@ -151,7 +153,22 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
           <button onClick={handleLogout} style={{ background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "7px 14px", color: "#ef4444", fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontSize: 12 }}>خروج</button>
         </div>
       </div>
-
+{/* تنبيه الاشتراك */}
+{(() => {
+  const daysLeft = seller?.subscription_end ? Math.ceil((new Date(seller.subscription_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
+  if (daysLeft > 7) return null;
+  return (
+    <div style={{ background: daysLeft <= 3 ? "#ef444422" : "#f59e0b22", border: `1px solid ${daysLeft <= 3 ? "#ef4444" : "#f59e0b"}`, margin: "12px 16px 0", borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+      <span style={{ fontSize: 22 }}>{daysLeft <= 3 ? "🚨" : "⚠️"}</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 700, color: daysLeft <= 3 ? "#ef4444" : "#f59e0b", fontSize: 13 }}>
+          {daysLeft <= 0 ? "انتهى اشتراكك!" : `ينتهي اشتراكك خلال ${daysLeft} أيام`}
+        </div>
+      </div>
+      <button onClick={() => window.open("https://wa.me/9647739863056?text=أريد تجديد اشتراكي في وصلني", "_blank")} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif", whiteSpace: "nowrap" }}>تجديد</button>
+    </div>
+  );
+})()}
       {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, padding: "16px" }}>
         {[
