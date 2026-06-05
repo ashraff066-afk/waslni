@@ -53,6 +53,11 @@ export default function ShopProfile() {
         <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, marginBottom: 16, border: "1px solid #ffffff15", textAlign: "center" }}>
           <h1 style={{ fontSize: 26, fontWeight: 900, color: "#fff", marginBottom: 8 }}>{seller.business_name}</h1>
           <p style={{ fontSize: 14, color: "#ffffff60", marginBottom: 16 }}>📍 {seller.city}</p>
+          {seller.phone && (
+  <a href={`https://wa.me/${seller.phone?.replace(/^0/, "964")}`} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#25d36622", border: "1px solid #25d36644", borderRadius: 20, padding: "8px 18px", fontSize: 13, color: "#25d366", fontWeight: 700, textDecoration: "none", marginBottom: 16 }}>
+    💬 تواصل معنا على واتساب
+  </a>
+)}
           {seller.description && (
   <p style={{ fontSize: 14, color: "#ffffff80", lineHeight: 1.7, marginBottom: 16 }}>{seller.description}</p>
 )}

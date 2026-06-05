@@ -7,6 +7,7 @@ export default function SellerDashboard() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [thisMonth, setThisMonth] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("orders");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
@@ -49,6 +50,11 @@ setSettingsDescription(sellerData.description || "");
 
     const { data: ordersData } = await supabase.from("orders").select("*").eq("seller_id", sellerData.id).order("created_at", { ascending: false });
     setOrders(ordersData || []);
+    const now = new Date();
+setThisMonth((ordersData || []).filter((o: any) => {
+  const d = new Date(o.created_at);
+  return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+}));
     setLoading(false);
   };
 
@@ -167,6 +173,7 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
           { id: "orders", label: "📦 الطلبات" },
           { id: "catalog", label: "🗂️ الكاتالوج" },
           { id: "add", label: "➕ إضافة" },
+          { id: "stats", label: "📊 الإحصاء" },
           { id: "settings", label: "⚙️ الإعدادات" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
@@ -250,7 +257,15 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
                       </div>
                       <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ color: "#ec4899", fontWeight: 800, fontSize: 14, marginBottom: 8 }}>{p.price?.toLocaleString()} د.ع</div>
-                      <button onClick={() => deleteProduct(p.id)} style={{ width: "100%", background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "6px", color: "#ef4444", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>🗑️ حذف</button>
+<div style={{ display: "flex", gap: 6 }}>
+  <button onClick={async () => {
+    await supabase.from("products").update({ in_stock: !p.in_stock }).eq("id", p.id);
+    checkUser();
+  }} style={{ flex: 1, background: p.in_stock ? "#f59e0b22" : "#00d4aa22", border: `1px solid ${p.in_stock ? "#f59e0b" : "#00d4aa"}`, borderRadius: 8, padding: "6px", color: p.in_stock ? "#f59e0b" : "#00d4aa", fontSize: 11, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>
+    {p.in_stock ? "نفذ" : "✅ متاح"}
+  </button>
+  <button onClick={() => deleteProduct(p.id)} style={{ flex: 1, background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "6px", color: "#ef4444", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>🗑️ حذف</button>
+</div>
                     </div>
                   </div>
                 ))}
@@ -258,6 +273,50 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
             )}
           </div>
         )}
+        {/* STATS */}
+{activeTab === "stats" && (
+  <div>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+      {[
+        { icon: "📦", label: "إجمالي الطلبات", value: orders.length, color: "#ec4899" },
+        { icon: "📅", label: "هذا الشهر", value: thisMonth.length, color: "#a855f7" },
+        { icon: "✅", label: "مؤكدة", value: orders.filter(o => o.status === "confirmed").length, color: "#00d4aa" },
+        { icon: "⏳", label: "انتظار", value: orders.filter(o => o.status === "pending").length, color: "#f59e0b" },
+        { icon: "🛍️", label: "المنتجات", value: products.length, color: "#ec4899" },
+        { icon: "📂", label: "الفئات", value: categories.length, color: "#a855f7" },
+      ].map((s, i) => (
+        <div key={i} style={{ background: "#ffffff10", borderRadius: 16, padding: 16, border: "1px solid #ffffff15" }}>
+          <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: s.color }}>{s.value}</div>
+          <div style={{ fontSize: 12, color: "#ffffff60", marginTop: 4 }}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* آخر الطلبات */}
+    <div style={{ background: "#ffffff10", borderRadius: 16, padding: 16, border: "1px solid #ffffff15" }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 14, fontSize: 14 }}>📋 آخر الطلبات</h3>
+      {thisMonth.length === 0 ? (
+        <div style={{ textAlign: "center", padding: 24, color: "#ffffff40", fontSize: 13 }}>ما في طلبات هذا الشهر</div>
+      ) : (
+        thisMonth.slice(0, 5).map((o, i) => (
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: i < Math.min(thisMonth.length, 5) - 1 ? "1px solid #ffffff10" : "none" }}>
+            <div>
+              <div style={{ fontWeight: 600, color: "#fff", fontSize: 13 }}>{o.customer_name}</div>
+              <div style={{ fontSize: 11, color: "#ffffff60" }}>{o.customer_phone}</div>
+            </div>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: 13, color: "#ec4899", fontWeight: 700 }}>{o.total?.toLocaleString()} د.ع</div>
+              <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 20, fontWeight: 600, background: o.status === "confirmed" ? "#00d4aa22" : o.status === "cancelled" ? "#ef444422" : "#f59e0b22", color: o.status === "confirmed" ? "#00d4aa" : o.status === "cancelled" ? "#ef4444" : "#f59e0b" }}>
+                {o.status === "confirmed" ? "مؤكد" : o.status === "cancelled" ? "ملغي" : "انتظار"}
+              </span>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+)}
 {/* SETTINGS */}
 {activeTab === "settings" && (
   <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15" }}>

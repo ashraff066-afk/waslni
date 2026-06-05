@@ -20,6 +20,7 @@ export default function ShopPage() {
   const [ordering, setOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [searchProduct, setSearchProduct] = useState("");
 useEffect(() => {
   if (typeof window !== "undefined" && !window.location.search.includes("shop=1")) {
     window.location.href = `/shop/${slug}/profile`;
@@ -78,7 +79,11 @@ useEffect(() => {
     } else { alert("حدث خطأ، حاول مجدداً"); }
   };
 
-  const filteredProducts = activeCategoryId ? products.filter(p => p.category_id === activeCategoryId) : products;
+const filteredProducts = products.filter(p => {
+  const matchCategory = activeCategoryId ? p.category_id === activeCategoryId : true;
+  const matchSearch = searchProduct ? p.name?.toLowerCase().includes(searchProduct.toLowerCase()) : true;
+  return matchCategory && matchSearch;
+});
 
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ec4899", fontSize: 18, fontFamily: "Tajawal, sans-serif" }}>جاري التحميل...</div>
@@ -144,7 +149,10 @@ if (orderSuccess) return (
           </button>
         </div>
       </div>
-
+{/* بحث */}
+<div style={{ padding: "16px 16px 0" }}>
+  <input type="text" placeholder="🔍 ابحث عن منتج..." value={searchProduct} onChange={e => setSearchProduct(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 14, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+</div>
       {/* فلتر الفئات */}
       <div style={{ display: "flex", gap: 8, overflowX: "auto", padding: "16px 16px 8px", scrollbarWidth: "none" }}>
         <button onClick={() => setActiveCategoryId(null)} style={{ padding: "8px 18px", borderRadius: 20, border: "none", cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontSize: 13, fontWeight: 700, background: !activeCategoryId ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff15", color: !activeCategoryId ? "#fff" : "#ffffff80", whiteSpace: "nowrap", flexShrink: 0 }}>الكل</button>
