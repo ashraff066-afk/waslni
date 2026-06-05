@@ -106,3 +106,10 @@ function ReviewContent() {
     </div>
   );
 }
+export default function ReviewPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ec4899", fontFamily: "Tajawal,sans-serif" }}>جاري التحميل...</div>}>
+      <ReviewContent />
+    </Suspense>
+  );
+}
