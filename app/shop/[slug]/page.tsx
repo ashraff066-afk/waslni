@@ -20,7 +20,11 @@ export default function ShopPage() {
   const [ordering, setOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
-
+useEffect(() => {
+  if (typeof window !== "undefined" && !window.location.search.includes("shop=1")) {
+    window.location.href = `/shop/${slug}/profile`;
+  }
+}, [slug]);
   useEffect(() => { if (slug) loadData(); }, [slug]);
 
   const loadData = async () => {
