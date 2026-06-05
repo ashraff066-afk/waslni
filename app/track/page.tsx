@@ -15,7 +15,7 @@ export default function TrackPage() {
     setNotFound(false);
     setOrder(null);
 
-    const { data } = await supabase.from("orders").select("*").ilike("id", `%${orderNumber.trim()}%`).limit(1);
+const { data } = await supabase.from("orders").select("*").ilike("order_number", `%${orderNumber.trim()}%`).limit(1);
 
     if (!data || data.length === 0) {
       setNotFound(true);

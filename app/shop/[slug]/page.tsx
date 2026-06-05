@@ -65,15 +65,16 @@ const { data: existing } = await supabase.from("orders").select("id").eq("seller
 if (existing && existing.length > 0) { alert("عندك طلب مسجل بهذا الرقم اليوم!"); return; }
     setOrdering(true);
     const oNumber = "WS-" + Date.now().toString().slice(-6);
-    const { error } = await supabase.from("orders").insert([{
-      seller_id: seller.id,
-      customer_name: customerName,
-      customer_phone: customerPhone,
-      customer_address: customerAddress,
-      items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
-      total,
-      status: "pending",
-    }]);
+const { error } = await supabase.from("orders").insert([{
+  order_number: oNumber,
+  seller_id: seller.id,
+  customer_name: customerName,
+  customer_phone: customerPhone,
+  customer_address: customerAddress,
+  items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+  total,
+  status: "pending",
+}]);
     setOrdering(false);
     if (!error) {
       const msg = `🛍️ طلب جديد!\nرقم الطلب: ${oNumber}\nالاسم: ${customerName}\nالهاتف: ${customerPhone}\nالعنوان: ${customerAddress}\nالمنتجات:\n${cart.map(i => `• ${i.name} x${i.qty} — ${(i.price * i.qty).toLocaleString()} د.ع`).join("\n")}\n\nالمجموع: ${total.toLocaleString()} د.ع`;
