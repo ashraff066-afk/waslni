@@ -113,9 +113,17 @@ export default function ShopProfile() {
 
       {/* زر التسوق */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: 16, background: "#0a0e1acc", backdropFilter: "blur(10px)", borderTop: "1px solid #ffffff15" }}>
-        <button onClick={() => window.location.href = `/shop/${slug}`} style={{ width: "100%", maxWidth: 600, display: "block", margin: "0 auto", padding: "15px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 17, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
-          🛍️ تسوق الآن
-        </button>
+       <div style={{ display: "flex", gap: 10, maxWidth: 600, margin: "0 auto" }}>
+  <button onClick={() => window.location.href = `/shop/${slug}?shop=1`} style={{ flex: 1, padding: "15px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 17, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+    🛍️ تسوق الآن
+  </button>
+  <button onClick={() => {
+    const url = `${window.location.origin}/shop/${slug}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(`🛍️ تسوق من ${seller?.business_name}!\n${url}`)}`, "_blank");
+  }} style={{ padding: "15px 18px", background: "#25d36622", border: "1px solid #25d366", borderRadius: 14, fontSize: 20, cursor: "pointer" }}>
+    📲
+  </button>
+</div>
       </div>
     </div>
   );
