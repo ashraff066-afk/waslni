@@ -53,6 +53,9 @@ export default function ShopProfile() {
         <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, marginBottom: 16, border: "1px solid #ffffff15", textAlign: "center" }}>
           <h1 style={{ fontSize: 26, fontWeight: 900, color: "#fff", marginBottom: 8 }}>{seller.business_name}</h1>
           <p style={{ fontSize: 14, color: "#ffffff60", marginBottom: 16 }}>📍 {seller.city}</p>
+          {seller.description && (
+  <p style={{ fontSize: 14, color: "#ffffff80", lineHeight: 1.7, marginBottom: 16 }}>{seller.description}</p>
+)}
           <div style={{ display: "flex", justifyContent: "center", gap: 24 }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 24, fontWeight: 900, color: "#ec4899" }}>{products.length}</div>

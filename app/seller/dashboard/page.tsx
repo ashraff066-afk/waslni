@@ -24,6 +24,7 @@ export default function SellerDashboard() {
 const [settingsPhone, setSettingsPhone] = useState("");
 const [settingsCity, setSettingsCity] = useState("");
 const [settingsImage, setSettingsImage] = useState<File | null>(null);
+const [settingsDescription, setSettingsDescription] = useState("");
 const [savingSettings, setSavingSettings] = useState(false);
 const [settingsSaved, setSettingsSaved] = useState(false);
 
@@ -38,6 +39,7 @@ const [settingsSaved, setSettingsSaved] = useState(false);
     setSettingsName(sellerData.business_name || "");
 setSettingsPhone(sellerData.phone || "");
 setSettingsCity(sellerData.city || "");
+setSettingsDescription(sellerData.description || "");
 
     const { data: catsData } = await supabase.from("categories").select("*").eq("seller_id", sellerData.id).order("created_at", { ascending: true });
     setCategories(catsData || []);
@@ -105,7 +107,7 @@ const saveSettings = async () => {
       imageUrl = data.publicUrl;
     }
   }
-  await supabase.from("sellers").update({ business_name: settingsName, phone: settingsPhone, city: settingsCity, image_url: imageUrl }).eq("id", seller.id);
+await supabase.from("sellers").update({ business_name: settingsName, phone: settingsPhone, city: settingsCity, image_url: imageUrl, description: settingsDescription }).eq("id", seller.id);
   setSavingSettings(false);
   setSettingsSaved(true);
   setTimeout(() => setSettingsSaved(false), 3000);
@@ -275,7 +277,10 @@ const saveSettings = async () => {
       <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>المدينة</label>
       <input type="text" value={settingsCity} onChange={e => setSettingsCity(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
     </div>
-
+<div style={{ marginBottom: 14 }}>
+  <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>📝 وصف المتجر</label>
+  <textarea placeholder="اكتب وصفاً قصيراً عن متجرك..." value={settingsDescription} onChange={e => setSettingsDescription(e.target.value)} rows={3} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", resize: "none" }} />
+</div>
     <div style={{ marginBottom: 20 }}>
       <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>📸 صورة المتجر</label>
       {seller?.image_url && (
