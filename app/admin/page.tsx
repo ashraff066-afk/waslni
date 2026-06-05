@@ -54,7 +54,14 @@ export default function AdminPage() {
     await supabase.from("sellers").update({ is_active: !current }).eq("id", id);
     loadData();
   };
-
+const deleteSeller = async (id: string, userId: string) => {
+  if (!confirm("هل أنت متأكد؟ سيتم حذف المتجر وكل بياناته نهائياً")) return;
+  await supabase.from("orders").delete().eq("seller_id", id);
+  await supabase.from("products").delete().eq("seller_id", id);
+  await supabase.from("categories").delete().eq("seller_id", id);
+  await supabase.from("sellers").delete().eq("id", id);
+  loadData();
+};
   const getDaysLeft = (end: string) => {
     if (!end) return 0;
     return Math.ceil((new Date(end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
@@ -195,6 +202,9 @@ export default function AdminPage() {
                   </div>
 
                   <button onClick={() => toggleActive(s.id, s.is_active)} style={{ width: "100%", padding: "8px", background: s.is_active ? "#ef444422" : "#00d4aa22", border: `1px solid ${s.is_active ? "#ef4444" : "#00d4aa"}`, borderRadius: 10, color: s.is_active ? "#ef4444" : "#00d4aa", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>
+                    <button onClick={() => deleteSeller(s.id, s.user_id)} style={{ width: "100%", padding: "8px", background: "#ef444433", border: "1px solid #ef4444", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700, marginTop: 6 }}>
+  🗑️ حذف المتجر نهائياً
+</button>
                     {s.is_active ? "🚫 تعطيل المتجر" : "✅ تفعيل المتجر"}
                   </button>
                 </div>
