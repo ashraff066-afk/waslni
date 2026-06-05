@@ -30,7 +30,8 @@ useEffect(() => {
 
   const loadData = async () => {
     const { data, error } = await supabase.from("sellers").select("*").eq("slug", slug).limit(1);
-    if (error || !data || data.length === 0) { setNotFound(true); setLoading(false); return; }
+if (error || !data || data.length === 0) { setNotFound(true); setLoading(false); return; }
+if (!data[0].is_active) { setNotFound(true); setLoading(false); return; }
     setSeller(data[0]);
     const { data: catsData } = await supabase.from("categories").select("*").eq("seller_id", data[0].id).order("created_at", { ascending: true });
     setCategories(catsData || []);
@@ -93,11 +94,16 @@ const filteredProducts = products.filter(p => {
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ec4899", fontSize: 18, fontFamily: "Tajawal, sans-serif" }}>جاري التحميل...</div>
   );
 
-  if (notFound) return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#e2e8f0", fontFamily: "Tajawal, sans-serif", textAlign: "center" }}>
-      <div><div style={{ fontSize: 64, marginBottom: 16 }}>😕</div><h2>المتجر غير موجود</h2></div>
+ if (notFound) return (
+  <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#e2e8f0", fontFamily: "Tajawal, sans-serif", textAlign: "center", padding: 16 }}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap');`}</style>
+    <div>
+      <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
+      <h2 style={{ fontWeight: 800, fontSize: 20, marginBottom: 8 }}>هذا المتجر غير متاح حالياً</h2>
+      <p style={{ color: "#ffffff60", fontSize: 14 }}>يرجى المحاولة لاحقاً</p>
     </div>
-  );
+  </div>
+);
 
 if (orderSuccess) return (
   <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "Tajawal, sans-serif" }}>

@@ -15,7 +15,7 @@ export default function ExpiredPage() {
           <div style={{ display: "flex", gap: 10 }}>
             <div style={{ flex: 1, background: "#a855f722", border: "1px solid #a855f744", borderRadius: 12, padding: 12, textAlign: "center" }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#a855f7", marginBottom: 4 }}>شهري</div>
-              <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>35,000</div>
+<div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>50,000</div>
               <div style={{ fontSize: 11, color: "#ffffff60" }}>د.ع / شهر</div>
             </div>
             <div style={{ flex: 1, background: "#ec489922", border: "2px solid #ec4899", borderRadius: 12, padding: 12, textAlign: "center" }}>
