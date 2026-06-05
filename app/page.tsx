@@ -47,7 +47,7 @@ export default function Home() {
           </div>
 
           <button onClick={() => window.location.href = "/seller"} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 16, padding: "14px 32px", color: "#fff", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "Tajawal,sans-serif", boxShadow: "0 8px 24px #ec489944" }}>
-            🚀 افتح متجرك مجاناً
+           🚀 افتح متجرك الآن
           </button>
         </div>
       </div>
