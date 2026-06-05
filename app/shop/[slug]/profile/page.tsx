@@ -11,6 +11,7 @@ export default function ShopProfile() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [reviews, setReviews] = useState<any[]>([]);
 
   useEffect(() => { if (slug) loadData(); }, [slug]);
 
@@ -22,6 +23,8 @@ export default function ShopProfile() {
     setProducts(prodsData || []);
     const { data: catsData } = await supabase.from("categories").select("*").eq("seller_id", data[0].id);
     setCategories(catsData || []);
+    const { data: reviewsData } = await supabase.from("reviews").select("*").eq("seller_id", data[0].id).order("created_at", { ascending: false }).limit(5);
+setReviews(reviewsData || []);
     setLoading(false);
   };
 
@@ -110,7 +113,25 @@ export default function ShopProfile() {
           </div>
         )}
       </div>
-
+{/* التقييمات */}
+{reviews.length > 0 && (
+  <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, marginBottom: 16, border: "1px solid #ffffff15" }}>
+    <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 14, fontSize: 15 }}>⭐ آراء الزبائن</h3>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {reviews.map((r, i) => (
+        <div key={i} style={{ background: "#ffffff08", borderRadius: 12, padding: "12px 16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <span style={{ fontWeight: 700, color: "#fff", fontSize: 13 }}>{r.customer_name || "زبون"}</span>
+            <div style={{ display: "flex", gap: 2 }}>
+              {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 14, filter: r.rating >= s ? "none" : "grayscale(1)" }}>⭐</span>)}
+            </div>
+          </div>
+          {r.comment && <p style={{ fontSize: 13, color: "#ffffff60", lineHeight: 1.6 }}>{r.comment}</p>}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
       {/* زر التسوق */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: 16, background: "#0a0e1acc", backdropFilter: "blur(10px)", borderTop: "1px solid #ffffff15" }}>
        <div style={{ display: "flex", gap: 10, maxWidth: 600, margin: "0 auto" }}>
