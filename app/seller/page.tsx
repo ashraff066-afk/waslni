@@ -317,20 +317,7 @@ payment_status: plan === "trial" ? "trial" : "pending",
                 </div>
               </div>
 
-              {payMethod === "rafidain" && (
-                <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 12, padding: 16, marginBottom: 12 }}>
-                  <p style={{ color: "#0369a1", fontWeight: 700, fontSize: 14, marginBottom: 10 }}>📋 بيانات التحويل:</p>
-                  <div style={{ background: "#fff", borderRadius: 8, padding: 12, marginBottom: 8 }}>
-                    <p style={{ color: "#6b7280", fontSize: 12, marginBottom: 4 }}>اسم صاحب الحساب</p>
-                    <p style={{ color: "#111827", fontWeight: 800, fontSize: 14 }}>— سيتم إضافته قريباً —</p>
-                  </div>
-                  <div style={{ background: "#fff", borderRadius: 8, padding: 12, marginBottom: 12 }}>
-                    <p style={{ color: "#6b7280", fontSize: 12, marginBottom: 4 }}>رقم الحساب</p>
-                    <p style={{ color: "#111827", fontWeight: 800, fontSize: 14 }}>— سيتم إضافته قريباً —</p>
-                  </div>
-                  <p style={{ color: "#0369a1", fontSize: 12, fontWeight: 600 }}>⚠️ بعد التحويل، تواصل معنا عبر واتساب لتفعيل حسابك</p>
-                </div>
-              )}
+              
 
               {/* WhatsApp */}
               <div className={`pay-card${payMethod === "whatsapp" ? " selected" : ""}`} onClick={() => setPayMethod("whatsapp")}>
@@ -351,7 +338,12 @@ payment_status: plan === "trial" ? "trial" : "pending",
                 disabled={!payMethod || loading}
                 onClick={() => {
                   if (payMethod === "whatsapp") handleWhatsapp();
-                  else if (payMethod === "rafidain") handleRegister();
+else if (payMethod === "rafidain") {
+  const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (300,000 د.ع)";
+  const msg = encodeURIComponent(`مرحباً، أريد الدفع الإلكتروني للاشتراك في وصلني\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`);
+  window.open(`https://wa.me/9647739863056?text=${msg}`, "_blank");
+  handleRegister();
+}
                 }}
                 style={{ ...btnMain, marginTop: 8, opacity: !payMethod ? 0.5 : 1 }}
               >
