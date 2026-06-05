@@ -201,12 +201,12 @@ const deleteSeller = async (id: string, userId: string) => {
                     <button onClick={() => updateSubscription(s.id, "yearly", 12)} style={{ padding: "7px 4px", background: "#ec489922", border: "1px solid #ec489944", borderRadius: 8, color: "#ec4899", fontSize: 11, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>⭐ سنوي</button>
                   </div>
 
-                  <button onClick={() => toggleActive(s.id, s.is_active)} style={{ width: "100%", padding: "8px", background: s.is_active ? "#ef444422" : "#00d4aa22", border: `1px solid ${s.is_active ? "#ef4444" : "#00d4aa"}`, borderRadius: 10, color: s.is_active ? "#ef4444" : "#00d4aa", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>
-                    <button onClick={() => deleteSeller(s.id, s.user_id)} style={{ width: "100%", padding: "8px", background: "#ef444433", border: "1px solid #ef4444", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700, marginTop: 6 }}>
+<button onClick={() => toggleActive(s.id, s.is_active)} style={{ width: "100%", padding: "8px", background: s.is_active ? "#ef444422" : "#00d4aa22", border: `1px solid ${s.is_active ? "#ef4444" : "#00d4aa"}`, borderRadius: 10, color: s.is_active ? "#ef4444" : "#00d4aa", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>
+  {s.is_active ? "🚫 تعطيل المتجر" : "✅ تفعيل المتجر"}
+</button>
+<button onClick={() => deleteSeller(s.id, s.user_id)} style={{ width: "100%", padding: "8px", background: "#ef444433", border: "1px solid #ef4444", borderRadius: 10, color: "#ef4444", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700, marginTop: 6 }}>
   🗑️ حذف المتجر نهائياً
 </button>
-                    {s.is_active ? "🚫 تعطيل المتجر" : "✅ تفعيل المتجر"}
-                  </button>
                 </div>
               );
             })
