@@ -20,6 +20,12 @@ export default function SellerDashboard() {
   const [productImage, setProductImage] = useState<File | null>(null);
   const [productCategoryId, setProductCategoryId] = useState("");
   const [addingProduct, setAddingProduct] = useState(false);
+  const [settingsName, setSettingsName] = useState("");
+const [settingsPhone, setSettingsPhone] = useState("");
+const [settingsCity, setSettingsCity] = useState("");
+const [settingsImage, setSettingsImage] = useState<File | null>(null);
+const [savingSettings, setSavingSettings] = useState(false);
+const [settingsSaved, setSettingsSaved] = useState(false);
 
   useEffect(() => { checkUser(); }, []);
 
@@ -29,6 +35,9 @@ export default function SellerDashboard() {
     const { data: sellerData } = await supabase.from("sellers").select("*").eq("user_id", user.id).single();
     if (!sellerData) { window.location.href = "/seller"; return; }
     setSeller(sellerData);
+    setSettingsName(sellerData.business_name || "");
+setSettingsPhone(sellerData.phone || "");
+setSettingsCity(sellerData.city || "");
 
     const { data: catsData } = await supabase.from("categories").select("*").eq("seller_id", sellerData.id).order("created_at", { ascending: true });
     setCategories(catsData || []);
@@ -83,7 +92,25 @@ export default function SellerDashboard() {
     await supabase.from("orders").update({ status }).eq("id", id);
     checkUser();
   };
-
+const saveSettings = async () => {
+  if (!seller) return;
+  setSavingSettings(true);
+  let imageUrl = seller.image_url || "";
+  if (settingsImage) {
+    const ext = settingsImage.name.split(".").pop();
+    const path = `${seller.id}.${ext}`;
+    const { error } = await supabase.storage.from("seller-images").upload(path, settingsImage, { upsert: true });
+    if (!error) {
+      const { data } = supabase.storage.from("seller-images").getPublicUrl(path);
+      imageUrl = data.publicUrl;
+    }
+  }
+  await supabase.from("sellers").update({ business_name: settingsName, phone: settingsPhone, city: settingsCity, image_url: imageUrl }).eq("id", seller.id);
+  setSavingSettings(false);
+  setSettingsSaved(true);
+  setTimeout(() => setSettingsSaved(false), 3000);
+  checkUser();
+};
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/seller";
@@ -138,6 +165,7 @@ export default function SellerDashboard() {
           { id: "orders", label: "📦 الطلبات" },
           { id: "catalog", label: "🗂️ الكاتالوج" },
           { id: "add", label: "➕ إضافة" },
+          { id: "settings", label: "⚙️ الإعدادات" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
         ))}
@@ -228,7 +256,39 @@ export default function SellerDashboard() {
             )}
           </div>
         )}
+{/* SETTINGS */}
+{activeTab === "settings" && (
+  <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15" }}>
+    <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 20, fontSize: 16 }}>⚙️ إعدادات المتجر</h3>
 
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>اسم المتجر</label>
+      <input type="text" value={settingsName} onChange={e => setSettingsName(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+    </div>
+
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>رقم الواتساب</label>
+      <input type="tel" value={settingsPhone} onChange={e => setSettingsPhone(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+    </div>
+
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>المدينة</label>
+      <input type="text" value={settingsCity} onChange={e => setSettingsCity(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+    </div>
+
+    <div style={{ marginBottom: 20 }}>
+      <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>📸 صورة المتجر</label>
+      {seller?.image_url && (
+        <img src={seller.image_url} alt="" style={{ width: "100%", height: 150, objectFit: "cover", borderRadius: 12, marginBottom: 10, border: "1px solid #ffffff20" }} />
+      )}
+      <input type="file" accept="image/*" onChange={e => setSettingsImage(e.target.files?.[0] || null)} style={{ width: "100%", padding: "10px", borderRadius: 12, background: "#ffffff15", border: "1px dashed #ec489966", color: "#fff", fontSize: 13, fontFamily: "Tajawal,sans-serif", cursor: "pointer" }} />
+    </div>
+
+    <button onClick={saveSettings} disabled={savingSettings} style={{ width: "100%", padding: "14px", background: settingsSaved ? "#00d4aa" : "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 16, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+      {savingSettings ? "جاري الحفظ..." : settingsSaved ? "✅ تم الحفظ!" : "💾 حفظ الإعدادات"}
+    </button>
+  </div>
+)}
         {/* ADD */}
         {activeTab === "add" && (
           <div>
