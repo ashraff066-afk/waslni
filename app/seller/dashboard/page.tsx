@@ -395,7 +395,7 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
               </div>
               <div style={{ marginBottom: 14 }}>
                 <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>السعر (د.ع)</label>
-                <input type="number" placeholder="0" value={productPrice || ""} onChange={e => setProductPrice(Number(e.target.value))} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+<input type="number" placeholder="0" min="0" value={productPrice || ""} onChange={e => setProductPrice(Math.abs(Number(e.target.value)))} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
               </div>
               <div style={{ marginBottom: 20 }}>
                 <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>صورة المنتج</label>
