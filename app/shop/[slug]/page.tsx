@@ -57,7 +57,11 @@ useEffect(() => {
   const cartCount = cart.reduce((a, i) => a + i.qty, 0);
 
   const placeOrder = async () => {
-    if (!customerName || !customerPhone || !customerAddress) { alert("يرجى إدخال جميع البيانات"); return; }
+if (!customerName || !customerPhone || !customerAddress) { alert("يرجى إدخال جميع البيانات"); return; }
+if (customerPhone.replace(/\s/g, '').length !== 11) { alert("رقم الهاتف يجب أن يكون 11 رقم"); return; }
+const today = new Date().toISOString().split("T")[0];
+const { data: existing } = await supabase.from("orders").select("id").eq("seller_id", seller.id).eq("customer_phone", customerPhone).gte("created_at", today).limit(1);
+if (existing && existing.length > 0) { alert("عندك طلب مسجل بهذا الرقم اليوم!"); return; }
     setOrdering(true);
     const oNumber = "WS-" + Date.now().toString().slice(-6);
     const { error } = await supabase.from("orders").insert([{
