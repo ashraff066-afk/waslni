@@ -9,7 +9,7 @@ export default function Home() {
   const [productsCount, setProductsCount] = useState(0);
 
   useEffect(() => {
-    supabase.from("sellers").select("*").eq("is_active", true).order("created_at", { ascending: false })
+supabase.from("sellers").select("*").eq("is_active", true).gt("subscription_end", new Date().toISOString()).order("created_at", { ascending: false })
       .then(({ data }) => { setSellers(data || []); setLoading(false); });
     supabase.from("products").select("id", { count: "exact" })
       .then(({ count }) => setProductsCount(count || 0));
