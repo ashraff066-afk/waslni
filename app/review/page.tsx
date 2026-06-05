@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "../supabase";
 
-export default function ReviewPage() {
+function ReviewContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get("order") || "";
   const [seller, setSeller] = useState<any>(null);
