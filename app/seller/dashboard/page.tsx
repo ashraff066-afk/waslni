@@ -36,6 +36,16 @@ const [settingsSaved, setSettingsSaved] = useState(false);
     if (!user) { window.location.href = "/seller"; return; }
     const { data: sellerData } = await supabase.from("sellers").select("*").eq("user_id", user.id).single();
     if (!sellerData) { window.location.href = "/seller"; return; }
+    if (sellerData.payment_status === "pending") {
+  setSeller(sellerData);
+  setLoading(false);
+  return;
+}
+    if (sellerData.payment_status === "pending") {
+  setLoading(false);
+  setSeller(sellerData);
+  return;
+}
     const daysLeft = sellerData.subscription_end ? Math.ceil((new Date(sellerData.subscription_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0;
 if (daysLeft <= 0) { window.location.href = "/seller/expired"; return; }
     setSeller(sellerData);
@@ -125,7 +135,37 @@ await supabase.from("sellers").update({ business_name: settingsName, phone: sett
     await supabase.auth.signOut();
     window.location.href = "/seller";
   };
-
+if (seller?.payment_status === "pending") return (
+  <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "Tajawal, sans-serif" }}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap');`}</style>
+    <div style={{ background: "#ffffff10", borderRadius: 24, padding: 32, maxWidth: 380, width: "100%", textAlign: "center", border: "1px solid #ffffff15" }}>
+      <div style={{ fontSize: 56, marginBottom: 16 }}>⏳</div>
+      <h2 style={{ color: "#fff", fontWeight: 800, fontSize: 20, marginBottom: 12 }}>حسابك قيد المراجعة</h2>
+      <p style={{ color: "#ffffff80", fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+        تم استلام طلبك بنجاح!<br />
+        سيتم تفعيل متجرك بعد تأكيد الدفع
+      </p>
+      <div style={{ background: "#ffffff08", borderRadius: 14, padding: "14px 16px", marginBottom: 24 }}>
+        <p style={{ color: "#ffffff60", fontSize: 12, marginBottom: 6 }}>الخطة المختارة</p>
+        <p style={{ color: "#a855f7", fontWeight: 800, fontSize: 15 }}>
+          {seller?.subscription_plan === "monthly" ? "شهري — 50,000 د.ع" : "سنوي — 300,000 د.ع"}
+        </p>
+      </div>
+      <button
+        onClick={() => window.open("https://wa.me/9647739863056?text=أريد تأكيد دفعي واشتراكي في وصلني", "_blank")}
+        style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#25d366,#128C7E)", border: "none", borderRadius: 14, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", marginBottom: 12 }}
+      >
+        💬 تواصل معنا عبر واتساب
+      </button>
+      <button
+        onClick={async () => { await supabase.auth.signOut(); window.location.href = "/seller"; }}
+        style={{ background: "transparent", border: "none", color: "#ffffff40", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}
+      >
+        خروج
+      </button>
+    </div>
+  </div>
+);
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ec4899", fontSize: 18, fontFamily: "Tajawal, sans-serif" }}>جاري التحميل...</div>
   );

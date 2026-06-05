@@ -88,10 +88,11 @@ export default function SellerLogin() {
         phone,
         city,
         slug,
-        is_active: plan === "trial",
+is_active: plan === "trial",
+payment_status: plan === "trial" ? "trial" : "pending",
         subscription_plan: plan,
         subscription_end,
-        payment_status: plan === "trial" ? "trial" : "pending",
+
       }]);
       window.location.href = "/seller/dashboard";
     }
