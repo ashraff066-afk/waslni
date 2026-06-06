@@ -179,7 +179,7 @@ if (seller?.payment_status === "pending") return (
       <div style={{ background: "#ffffff08", borderRadius: 14, padding: "14px 16px", marginBottom: 24 }}>
         <p style={{ color: "#ffffff60", fontSize: 12, marginBottom: 6 }}>الخطة المختارة</p>
         <p style={{ color: "#a855f7", fontWeight: 800, fontSize: 15 }}>
-          {seller?.subscription_plan === "monthly" ? "شهري — 50,000 د.ع" : "سنوي — 300,000 د.ع"}
+          {seller?.subscription_plan === "monthly" ? "شهري — 35,000 د.ع" : "سنوي — 300,000 د.ع"}
         </p>
       </div>
       <button

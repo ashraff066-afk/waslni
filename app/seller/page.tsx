@@ -148,7 +148,7 @@ if (!userId) {
 };
 
   const handleWhatsapp = () => {
-    const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (400,000 د.ع)";
+    const planLabel = plan === "monthly" ? "الشهري (35,000 د.ع)" : "السنوي (400,000 د.ع)";
     const msg = encodeURIComponent(
       `مرحباً، أريد الاشتراك في Shopli\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`
     );
@@ -306,7 +306,7 @@ if (!userId) {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontWeight: 800, fontSize: 16, color: "#111827" }}>📅 شهري</div>
-                    <div style={{ color: "#6b7280", fontSize: 13, marginTop: 4 }}>50,000 دينار / شهر</div>
+                    <div style={{ color: "#6b7280", fontSize: 13, marginTop: 4 }}>35,000 دينار / شهر</div>
                   </div>
                   <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${plan === "monthly" ? "#ec4899" : "#d1d5db"}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {plan === "monthly" && <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ec4899" }} />}
@@ -349,7 +349,7 @@ if (!userId) {
               <div style={{ background: "linear-gradient(135deg,#fdf2f8,#f5f3ff)", borderRadius: 12, padding: "12px 16px", marginBottom: 20, textAlign: "center" }}>
                 <span style={{ color: "#6b7280", fontSize: 13 }}>المبلغ المطلوب: </span>
                 <span style={{ color: "#ec4899", fontWeight: 800, fontSize: 16 }}>
-               {plan === "monthly" ? "50,000" : "300,000"} دينار عراقي
+               {plan === "monthly" ? "35,000" : "300,000"} دينار عراقي
                 </span>
               </div>
 
@@ -387,7 +387,7 @@ if (!userId) {
                 onClick={() => {
                   if (payMethod === "whatsapp") handleWhatsapp();
 else if (payMethod === "rafidain") {
-  const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (300,000 د.ع)";
+  const planLabel = plan === "monthly" ? "الشهري (35,000 د.ع)" : "السنوي (300,000 د.ع)";
   const msg = encodeURIComponent(`مرحباً، أريد الدفع الإلكتروني للاشتراك في Shopli\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`);
   window.open(`https://wa.me/9647739863056?text=${msg}`, "_blank");
   handleRegister();

@@ -154,7 +154,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
         <div style={{ background: "#a855f722", borderRadius: 16, padding: "14px 10px", textAlign: "center", border: "1px solid #a855f744" }}>
           <div style={{ fontSize: 20, marginBottom: 6 }}>📅</div>
           <div style={{ fontWeight: 800, color: "#a855f7", fontSize: 13, marginBottom: 4 }}>شهري</div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>50,000</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>35,000</div>
           <div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>دينار / شهر</div>
         </div>
         <div style={{ background: "#ec489922", borderRadius: 16, padding: "14px 10px", textAlign: "center", border: "2px solid #ec489966", position: "relative" }}>

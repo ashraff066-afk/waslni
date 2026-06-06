@@ -150,7 +150,7 @@ const deleteSeller = async (id: string, userId: string) => {
                   <div style={{ background: "#ffffff08", borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <span style={{ fontSize: 13, color: "#ffffff80" }}>
-                        الخطة: <span style={{ color: "#a855f7", fontWeight: 700 }}>{s.subscription_plan === "monthly" ? "شهري — 50,000 د.ع" : "سنوي — 300,000 د.ع"}</span>
+                        الخطة: <span style={{ color: "#a855f7", fontWeight: 700 }}>{s.subscription_plan === "monthly" ? "شهري — 35,000 د.ع" : "سنوي — 300,000 د.ع"}</span>
                       </span>
                       <span style={{ fontSize: 12, color: "#ffffff60" }}>
                         {s.created_at ? new Date(s.created_at).toLocaleDateString("ar-IQ") : ""}
