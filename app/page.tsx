@@ -25,7 +25,8 @@ supabase.from("sellers").select("*").eq("is_active", true).gt("subscription_end"
     <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", color: "#e2e8f0", fontFamily: "'Tajawal','Cairo',sans-serif", paddingBottom: 60 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
+input, textarea { -webkit-user-select: text; user-select: text; }
         .shop-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px #ec489922; }
         .shop-card { transition: all 0.25s; }
       `}</style>

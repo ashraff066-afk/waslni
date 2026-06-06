@@ -108,7 +108,7 @@ const filteredProducts = products.filter(p => {
 
 if (orderSuccess) return (
   <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "Tajawal, sans-serif" }}>
-    <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0}`}</style>
+<style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none;} input,textarea{-webkit-user-select:text;user-select:text;}`}</style>
     <div style={{ background: "#ffffff10", borderRadius: 24, padding: 32, maxWidth: 420, width: "100%", textAlign: "center", border: "1px solid #ffffff15" }}>
       <div style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
       <h2 style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 8 }}>تم الطلب بنجاح!</h2>
@@ -145,7 +145,7 @@ if (orderSuccess) return (
 
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", color: "#e2e8f0", fontFamily: "'Tajawal','Cairo',sans-serif", paddingBottom: 100 }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0}`}</style>
+<style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none;} input,textarea{-webkit-user-select:text;user-select:text;}`}</style>
 
       {/* HEADER */}
       <div style={{ background: "#ffffff10", backdropFilter: "blur(10px)", borderBottom: "1px solid #ffffff15", padding: "16px", position: "sticky", top: 0, zIndex: 50 }}>
