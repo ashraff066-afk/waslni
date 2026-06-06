@@ -12,6 +12,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [added, setAdded] = useState(false);
+  const [qty, setQty] = useState(1);
 
   useEffect(() => { if (id && slug) loadData(); }, [id, slug]);
 
@@ -22,6 +23,20 @@ export default function ProductPage() {
     const { data: sellerData } = await supabase.from("sellers").select("*").eq("slug", slug).single();
     setSeller(sellerData);
     setLoading(false);
+  };
+
+  const addToCart = () => {
+    if (!product.in_stock) return;
+    const cart = JSON.parse(localStorage.getItem(`cart_${slug}`) || "[]");
+    const existing = cart.find((i: any) => i.id === product.id);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      cart.push({ ...product, qty });
+    }
+    localStorage.setItem(`cart_${slug}`, JSON.stringify(cart));
+    setAdded(true);
+    setTimeout(() => window.location.href = `/shop/${slug}?shop=1`, 1000);
   };
 
   if (loading) return (
@@ -35,7 +50,7 @@ export default function ProductPage() {
   );
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", color: "#e2e8f0", fontFamily: "'Tajawal','Cairo',sans-serif", paddingBottom: 100 }}>
+    <div dir="rtl" style={{ minHeight: "100vh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", color: "#e2e8f0", fontFamily: "'Tajawal','Cairo',sans-serif", paddingBottom: 120 }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap'); *{box-sizing:border-box;margin:0;padding:0}`}</style>
 
       {/* زر الرجوع */}
@@ -63,6 +78,19 @@ export default function ProductPage() {
           </div>
         </div>
 
+        {/* اختيار الكمية */}
+        {product.in_stock && (
+          <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, marginBottom: 16, border: "1px solid #ffffff15" }}>
+            <p style={{ color: "#ffffff80", fontSize: 14, fontWeight: 600, marginBottom: 14 }}>الكمية</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ width: 44, height: 44, borderRadius: 12, background: "#ef444422", border: "1px solid #ef4444", color: "#ef4444", fontSize: 22, cursor: "pointer", fontWeight: 700 }}>−</button>
+              <span style={{ fontSize: 24, fontWeight: 900, color: "#fff", minWidth: 30, textAlign: "center" }}>{qty}</span>
+              <button onClick={() => setQty(q => q + 1)} style={{ width: 44, height: 44, borderRadius: 12, background: "#00d4aa22", border: "1px solid #00d4aa", color: "#00d4aa", fontSize: 22, cursor: "pointer", fontWeight: 700 }}>+</button>
+              <span style={{ color: "#ffffff60", fontSize: 14, marginRight: "auto" }}>المجموع: <span style={{ color: "#ec4899", fontWeight: 800 }}>{(product.price * qty).toLocaleString()} د.ع</span></span>
+            </div>
+          </div>
+        )}
+
         {/* معلومات المتجر */}
         {seller && (
           <div style={{ background: "#ffffff10", borderRadius: 20, padding: 16, marginBottom: 16, border: "1px solid #ffffff15", display: "flex", alignItems: "center", gap: 12 }}>
@@ -82,16 +110,8 @@ export default function ProductPage() {
 
       {/* زر إضافة للسلة */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: 16, background: "#0a0e1acc", backdropFilter: "blur(10px)", borderTop: "1px solid #ffffff15" }}>
-        <button onClick={() => {
-          if (!product.in_stock) return;
-          const cart = JSON.parse(localStorage.getItem(`cart_${slug}`) || "[]");
-          const existing = cart.find((i: any) => i.id === product.id);
-          if (existing) { existing.qty += 1; } else { cart.push({ ...product, qty: 1 }); }
-          localStorage.setItem(`cart_${slug}`, JSON.stringify(cart));
-          setAdded(true);
-          setTimeout(() => window.location.href = `/shop/${slug}?shop=1`, 1000);
-        }} disabled={!product.in_stock} style={{ width: "100%", maxWidth: 600, display: "block", margin: "0 auto", padding: "15px", background: product.in_stock ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#333", border: "none", borderRadius: 14, fontSize: 17, fontWeight: 800, cursor: product.in_stock ? "pointer" : "not-allowed", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
-          {added ? "✅ تمت الإضافة! جاري التحويل..." : product.in_stock ? "🛒 أضف للسلة" : "❌ نفذ المخزون"}
+        <button onClick={addToCart} disabled={!product.in_stock} style={{ width: "100%", maxWidth: 600, display: "block", margin: "0 auto", padding: "15px", background: product.in_stock ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#333", border: "none", borderRadius: 14, fontSize: 17, fontWeight: 800, cursor: product.in_stock ? "pointer" : "not-allowed", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+          {added ? "✅ تمت الإضافة! جاري التحويل..." : product.in_stock ? `🛒 أضف للسلة — ${(product.price * qty).toLocaleString()} د.ع` : "❌ نفذ المخزون"}
         </button>
       </div>
     </div>

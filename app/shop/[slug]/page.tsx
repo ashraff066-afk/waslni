@@ -10,7 +10,7 @@ export default function ShopPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
-  const [cart, setCart] = useState<any[]>([]);
+const [cart, setCart] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showCart, setShowCart] = useState(false);
@@ -26,7 +26,16 @@ useEffect(() => {
     window.location.href = `/shop/${slug}/profile`;
   }
 }, [slug]);
-  useEffect(() => { if (slug) loadData(); }, [slug]);
+useEffect(() => {
+  if (slug) {
+    loadData();
+    const saved = localStorage.getItem(`cart_${slug}`);
+    if (saved) setCart(JSON.parse(saved));
+  }
+}, [slug]);
+useEffect(() => {
+  if (slug) localStorage.setItem(`cart_${slug}`, JSON.stringify(cart));
+}, [cart, slug]);
 
   const loadData = async () => {
     const { data, error } = await supabase.from("sellers").select("*").eq("slug", slug).limit(1);
@@ -81,7 +90,8 @@ const { error } = await supabase.from("orders").insert([{
       window.open(`https://wa.me/${seller.phone?.replace(/^0/, "964")}?text=${encodeURIComponent(msg)}`, "_blank");
       setOrderNumber(oNumber);
       setOrderSuccess(true);
-      setCart([]);
+setCart([]);
+localStorage.removeItem(`cart_${slug}`);
     } else { alert("حدث خطأ، حاول مجدداً"); }
   };
 
