@@ -21,6 +21,13 @@ export default function SellerDashboard() {
   const [productImage, setProductImage] = useState<File | null>(null);
   const [productCategoryId, setProductCategoryId] = useState("");
   const [addingProduct, setAddingProduct] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+const [editName, setEditName] = useState("");
+const [editPrice, setEditPrice] = useState(0);
+const [editDesc, setEditDesc] = useState("");
+const [editImage, setEditImage] = useState<File | null>(null);
+const [editCategoryId, setEditCategoryId] = useState("");
+const [savingEdit, setSavingEdit] = useState(false);
   const [settingsName, setSettingsName] = useState("");
 const [settingsPhone, setSettingsPhone] = useState("");
 const [settingsCity, setSettingsCity] = useState("");
@@ -108,6 +115,30 @@ setThisMonth((ordersData || []).filter((o: any) => {
     checkUser();
   };
 
+  const saveEditProduct = async () => {
+  if (!editingProduct) return;
+  setSavingEdit(true);
+  let imageUrl = editingProduct.image_url || "";
+  if (editImage) {
+    const ext = editImage.name.split(".").pop();
+    const path = `${seller.id}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(path, editImage, { upsert: true });
+    if (!error) {
+      const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+      imageUrl = data.publicUrl;
+    }
+  }
+  await supabase.from("products").update({
+    name: editName,
+    price: editPrice,
+    description: editDesc,
+    image_url: imageUrl,
+    category_id: editCategoryId || null,
+  }).eq("id", editingProduct.id);
+  setSavingEdit(false);
+  setEditingProduct(null);
+  checkUser();
+};
   const updateOrderStatus = async (id: string, status: string) => {
     await supabase.from("orders").update({ status }).eq("id", id);
     checkUser();
@@ -334,6 +365,7 @@ if (seller?.payment_status === "pending") return (
   }} style={{ flex: 1, background: p.in_stock ? "#f59e0b22" : "#00d4aa22", border: `1px solid ${p.in_stock ? "#f59e0b" : "#00d4aa"}`, borderRadius: 8, padding: "6px", color: p.in_stock ? "#f59e0b" : "#00d4aa", fontSize: 11, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>
     {p.in_stock ? "نفذ" : "✅ متاح"}
   </button>
+  <button onClick={() => { setEditingProduct(p); setEditName(p.name); setEditPrice(p.price); setEditDesc(p.description || ""); setEditCategoryId(p.category_id || ""); setEditImage(null); }} style={{ flex: 1, background: "#a855f722", border: "1px solid #a855f7", borderRadius: 8, padding: "6px", color: "#a855f7", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>✏️ تعديل</button>
   <button onClick={() => deleteProduct(p.id)} style={{ flex: 1, background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "6px", color: "#ef4444", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>🗑️ حذف</button>
 </div>
                     </div>
@@ -477,7 +509,46 @@ if (seller?.payment_status === "pending") return (
             </div>
           </div>
         )}
-
+{/* MODAL تعديل المنتج */}
+{editingProduct && (
+  <div style={{ position: "fixed", inset: 0, background: "#000000bb", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setEditingProduct(null)}>
+    <div dir="rtl" style={{ width: "100%", background: "linear-gradient(135deg,#1a0a12,#150a1e)", borderRadius: "24px 24px 0 0", padding: 24, maxHeight: "90vh", overflowY: "auto", border: "1px solid #ffffff15" }} onClick={e => e.stopPropagation()}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 20, fontSize: 16 }}>✏️ تعديل المنتج</h3>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>اسم المنتج</label>
+        <input type="text" value={editName} onChange={e => setEditName(e.target.value)} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>السعر (د.ع)</label>
+        <input type="number" min="0" value={editPrice || ""} onChange={e => setEditPrice(Math.abs(Number(e.target.value)))} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>الوصف</label>
+        <textarea value={editDesc} onChange={e => setEditDesc(e.target.value)} rows={2} style={{ width: "100%", padding: "13px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", resize: "none" }} />
+      </div>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>الفئة</label>
+        <select value={editCategoryId} onChange={e => setEditCategoryId(e.target.value)} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }}>
+          <option value="">بدون فئة</option>
+          {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+        </select>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>صورة جديدة (اختياري)</label>
+        {editingProduct.image_url && !editImage && (
+          <img src={editingProduct.image_url} alt="" style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 12, marginBottom: 10, border: "1px solid #ffffff20" }} />
+        )}
+        <input type="file" accept="image/*" onChange={e => setEditImage(e.target.files?.[0] || null)} style={{ width: "100%", padding: "10px", borderRadius: 12, background: "#ffffff15", border: "1px dashed #a855f766", color: "#fff", fontSize: 13, fontFamily: "Tajawal,sans-serif", cursor: "pointer" }} />
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button onClick={saveEditProduct} disabled={savingEdit} style={{ flex: 1, padding: "14px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+          {savingEdit ? "جاري الحفظ..." : "💾 حفظ التعديلات"}
+        </button>
+        <button onClick={() => setEditingProduct(null)} style={{ padding: "14px 20px", background: "#ffffff15", border: "none", borderRadius: 14, fontSize: 15, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>إلغاء</button>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );
