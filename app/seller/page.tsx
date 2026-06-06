@@ -148,7 +148,7 @@ if (!userId) {
 };
 
   const handleWhatsapp = () => {
-    const planLabel = plan === "monthly" ? "الشهري (35,000 د.ع)" : "السنوي (400,000 د.ع)";
+    const planLabel = plan === "monthly" ? "الشهري (35,000 د.ع)" : "السنوي (350,000 د.ع)";
     const msg = encodeURIComponent(
       `مرحباً، أريد الاشتراك في Shopli\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`
     );
@@ -323,7 +323,7 @@ if (!userId) {
 <span style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", color: "#fff", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>عرض خاص</span>
                     </div>
                     <div style={{ color: "#6b7280", fontSize: 13, marginTop: 4 }}>
-                     <span style={{ textDecoration: "line-through", marginLeft: 6 }}>400,000</span>
+                     <span style={{ textDecoration: "line-through", marginLeft: 6 }}>350,000</span>
 <span style={{ color: "#ec4899", fontWeight: 700 }}>300,000 دينار / سنة</span>
                     </div>
                   </div>
