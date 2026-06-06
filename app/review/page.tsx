@@ -20,7 +20,7 @@ function ReviewContent() {
   }, [orderNumber]);
 
   const loadOrder = async () => {
-    const { data } = await supabase.from("orders").select("*").eq("id", orderNumber).single();
+const { data } = await supabase.from("orders").select("*").eq("order_number", orderNumber).single();
     if (data) {
       setCustomerName(data.customer_name || "");
       const { data: sellerData } = await supabase.from("sellers").select("*").eq("id", data.seller_id).single();

@@ -17,7 +17,8 @@ export default function ShopProfile() {
 
   const loadData = async () => {
     const { data, error } = await supabase.from("sellers").select("*").eq("slug", slug).limit(1);
-    if (error || !data || data.length === 0) { setNotFound(true); setLoading(false); return; }
+if (error || !data || data.length === 0) { setNotFound(true); setLoading(false); return; }
+if (!data[0].is_active) { setNotFound(true); setLoading(false); return; }
     setSeller(data[0]);
     const { data: prodsData } = await supabase.from("products").select("*").eq("seller_id", data[0].id);
     setProducts(prodsData || []);
