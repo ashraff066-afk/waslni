@@ -198,15 +198,7 @@ if (orderSuccess) return (
                     <div style={{ fontWeight: 700, color: "#fff", fontSize: 13, marginBottom: 4 }}>{p.name}</div>
                     {p.description && <div style={{ fontSize: 11, color: "#ffffff60", marginBottom: 6, lineHeight: 1.5 }}>{p.description}</div>}
                     <div style={{ color: "#ec4899", fontWeight: 900, fontSize: 15, marginBottom: 10 }}>{p.price?.toLocaleString()} د.ع</div>
-                    {inCart ? (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#ffffff15", borderRadius: 10, padding: "6px 10px" }}>
-                        <button onClick={() => updateQty(p.id, inCart.qty - 1)} style={{ background: "#ef444422", border: "1px solid #ef4444", borderRadius: 6, width: 28, height: 28, color: "#ef4444", fontSize: 16, cursor: "pointer", fontWeight: 700 }}>-</button>
-                        <span style={{ color: "#fff", fontWeight: 700 }}>{inCart.qty}</span>
-                        <button onClick={() => updateQty(p.id, inCart.qty + 1)} style={{ background: "#00d4aa22", border: "1px solid #00d4aa", borderRadius: 6, width: 28, height: 28, color: "#00d4aa", fontSize: 16, cursor: "pointer", fontWeight: 700 }}>+</button>
-                      </div>
-                    ) : (
-                      <button onClick={() => addToCart(p)} style={{ width: "100%", padding: "8px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 10, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>+ أضف للسلة</button>
-                    )}
+                   <button onClick={() => window.location.href = `/shop/${slug}/product/${p.id}`} style={{ width: "100%", padding: "8px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 10, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>عرض المنتج ←</button>
                   </div>
                 </div>
               );
