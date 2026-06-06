@@ -39,7 +39,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 
         <div style={{ position: "relative" }}>
           <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 90, height: 90, borderRadius: 28, background: "linear-gradient(135deg,#ec4899,#a855f7)", boxShadow: "0 16px 48px #ec489944", marginBottom: 20, fontSize: 48 }}>🛍️</div>
-          <h1 style={{ fontSize: 44, fontWeight: 900, background: "linear-gradient(135deg,#ec4899,#a855f7,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: 10, lineHeight: 1.2 }}>وصلني</h1>
+          <h1 style={{ fontSize: 44, fontWeight: 900, background: "linear-gradient(135deg,#ec4899,#a855f7,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: 10, lineHeight: 1.2 }}>Shopli</h1>
           <p style={{ color: "#ffffff80", fontSize: 16, marginBottom: 32, maxWidth: 400, margin: "0 auto 32px" }}>منصة التسوق والتوصيل — اكتشف أفضل المتاجر وتسوق بسهولة</p>
 
           {/* بحث */}
@@ -70,7 +70,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 
       {/* كيف يشتغل */}
       <div style={{ maxWidth: 700, margin: "24px auto 0", padding: "0 16px" }}>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 16, textAlign: "center" }}>✨ كيف يشتغل وصلني؟</h2>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 16, textAlign: "center" }}>✨ كيف يشتغل Shopli؟</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
           {[
             { icon: "🔍", title: "اكتشف", desc: "تصفح المتاجر واختار اللي يعجبك" },
@@ -124,7 +124,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
     <div style={{ position: "relative" }}>
       <div style={{ fontSize: 48, marginBottom: 12 }}>🚀</div>
       <h2 style={{ fontSize: 24, fontWeight: 900, color: "#fff", marginBottom: 10 }}>افتح متجرك اليوم!</h2>
-      <p style={{ color: "#ffffff70", fontSize: 14, marginBottom: 24, lineHeight: 1.8 }}>انضم لمنصة وصلني وابدأ تبيع منتجاتك أونلاين بسهولة</p>
+      <p style={{ color: "#ffffff70", fontSize: 14, marginBottom: 24, lineHeight: 1.8 }}>انضم لمنصة Shopli وابدأ تبيع منتجاتك أونلاين بسهولة</p>
 
       {/* المميزات */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10, marginBottom: 24, textAlign: "right" }}>
@@ -174,7 +174,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 </div>
       {/* فوتر */}
       <div style={{ textAlign: "center", padding: "40px 16px 20px", color: "#ffffff30", fontSize: 13 }}>
-        وصلني — منصة التسوق والتوصيل 🛍️
+        Shopli — منصة التسوق والتوصيل 🛍️
       </div>
     </div>
   );

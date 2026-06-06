@@ -150,7 +150,7 @@ if (!userId) {
   const handleWhatsapp = () => {
     const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (400,000 د.ع)";
     const msg = encodeURIComponent(
-      `مرحباً، أريد الاشتراك في وصلني\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`
+      `مرحباً، أريد الاشتراك في Shopli\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`
     );
     window.open(`https://wa.me/9647739863056?text=${msg}`, "_blank");
     handleRegister();
@@ -193,7 +193,7 @@ if (!userId) {
           <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 80, height: 80, borderRadius: 24, background: "linear-gradient(135deg,#ec4899,#a855f7)", boxShadow: "0 12px 40px #ec489944", marginBottom: 16 }}>
             <span style={{ fontSize: 40 }}>🛍️</span>
           </div>
-          <h1 style={{ fontSize: 38, fontWeight: 900, background: "linear-gradient(135deg,#ec4899,#a855f7)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>وصلني</h1>
+          <h1 style={{ fontSize: 38, fontWeight: 900, background: "linear-gradient(135deg,#ec4899,#a855f7)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Shopli</h1>
           <p style={{ color: "#9ca3af", fontSize: 15, marginTop: 6, fontWeight: 500 }}>منصة البيع والتوصيل</p>
         </div>
 
@@ -388,7 +388,7 @@ if (!userId) {
                   if (payMethod === "whatsapp") handleWhatsapp();
 else if (payMethod === "rafidain") {
   const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (300,000 د.ع)";
-  const msg = encodeURIComponent(`مرحباً، أريد الدفع الإلكتروني للاشتراك في وصلني\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`);
+  const msg = encodeURIComponent(`مرحباً، أريد الدفع الإلكتروني للاشتراك في Shopli\nالخطة: ${planLabel}\nاسم المتجر: ${businessName}\nالمدينة: ${city}`);
   window.open(`https://wa.me/9647739863056?text=${msg}`, "_blank");
   handleRegister();
 }

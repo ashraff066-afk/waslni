@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 
-const ADMIN_PASSWORD = "waslni@admin2026";
+const ADMIN_PASSWORD = "Shopli@admin2026";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
@@ -89,7 +89,7 @@ const deleteSeller = async (id: string, userId: string) => {
       <div style={{ background: "#ffffff10", borderBottom: "1px solid #ffffff15", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, zIndex: 50, backdropFilter: "blur(10px)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ fontSize: 28 }}>🔐</div>
-          <h1 style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>لوحة الأدمن — وصلني</h1>
+          <h1 style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>لوحة الأدمن — Shopli</h1>
         </div>
         <button onClick={() => setAuthed(false)} style={{ background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "7px 14px", color: "#ef4444", fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontSize: 12 }}>خروج</button>
       </div>

@@ -183,7 +183,7 @@ if (seller?.payment_status === "pending") return (
         </p>
       </div>
       <button
-        onClick={() => window.open("https://wa.me/9647739863056?text=أريد تأكيد دفعي واشتراكي في وصلني", "_blank")}
+        onClick={() => window.open("https://wa.me/9647739863056?text=أريد تأكيد دفعي واشتراكي في Shopli", "_blank")}
         style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#25d366,#128C7E)", border: "none", borderRadius: 14, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", marginBottom: 12 }}
       >
         💬 تواصل معنا عبر واتساب
@@ -236,7 +236,7 @@ if (seller?.payment_status === "pending") return (
           {daysLeft <= 0 ? "انتهى اشتراكك!" : `ينتهي اشتراكك خلال ${daysLeft} أيام`}
         </div>
       </div>
-      <button onClick={() => window.open("https://wa.me/9647739863056?text=أريد تجديد اشتراكي في وصلني", "_blank")} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif", whiteSpace: "nowrap" }}>تجديد</button>
+      <button onClick={() => window.open("https://wa.me/9647739863056?text=أريد تجديد اشتراكي في Shopli", "_blank")} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif", whiteSpace: "nowrap" }}>تجديد</button>
     </div>
   );
 })()}

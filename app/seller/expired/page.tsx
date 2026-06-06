@@ -8,7 +8,7 @@ export default function ExpiredPage() {
         <div style={{ fontSize: 64, marginBottom: 16 }}>⏰</div>
         <h2 style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 10 }}>انتهى اشتراكك!</h2>
         <p style={{ color: "#ffffff60", fontSize: 14, marginBottom: 24, lineHeight: 1.7 }}>
-          للاستمرار في استخدام متجرك وصلني، يرجى تجديد اشتراكك.
+          للاستمرار في استخدام متجرك Shopli، يرجى تجديد اشتراكك.
         </p>
         <div style={{ background: "#ffffff08", borderRadius: 16, padding: 16, marginBottom: 24 }}>
           <div style={{ fontSize: 13, color: "#ffffff80", marginBottom: 8 }}>خطط الاشتراك</div>
@@ -26,7 +26,7 @@ export default function ExpiredPage() {
             </div>
           </div>
         </div>
-        <button onClick={() => window.open("https://wa.me/9647739863056?text=أريد تجديد اشتراكي في وصلني", "_blank")} style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#25d366,#128c7e)", border: "none", borderRadius: 14, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }}>
+        <button onClick={() => window.open("https://wa.me/9647739863056?text=أريد تجديد اشتراكي في Shopli", "_blank")} style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#25d366,#128c7e)", border: "none", borderRadius: 14, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }}>
           💬 تواصل معنا على واتساب
         </button>
         <button onClick={() => window.location.href = "/seller"} style={{ width: "100%", padding: "12px", background: "transparent", border: "1px solid #ffffff20", borderRadius: 14, fontSize: 14, fontWeight: 700, cursor: "pointer", color: "#ffffff60", fontFamily: "Tajawal,sans-serif" }}>
