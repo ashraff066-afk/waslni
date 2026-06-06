@@ -115,7 +115,62 @@ supabase.from("sellers").select("*").eq("is_active", true).gt("subscription_end"
           </div>
         )}
       </div>
+{/* قسم البائعين */}
+<div style={{ maxWidth: 700, margin: "32px auto 0", padding: "0 16px" }}>
+  <div style={{ background: "linear-gradient(135deg,#2d0a1e,#1a0a2e)", borderRadius: 24, padding: "32px 24px", border: "1px solid #ec489933", textAlign: "center", position: "relative", overflow: "hidden" }}>
+    <div style={{ position: "absolute", top: -40, right: -40, width: 150, height: 150, borderRadius: "50%", background: "#ec489915", filter: "blur(30px)" }} />
+    <div style={{ position: "absolute", bottom: -30, left: -30, width: 120, height: 120, borderRadius: "50%", background: "#a855f715", filter: "blur(30px)" }} />
+    <div style={{ position: "relative" }}>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>🚀</div>
+      <h2 style={{ fontSize: 24, fontWeight: 900, color: "#fff", marginBottom: 10 }}>افتح متجرك اليوم!</h2>
+      <p style={{ color: "#ffffff70", fontSize: 14, marginBottom: 24, lineHeight: 1.8 }}>انضم لمنصة وصلني وابدأ تبيع منتجاتك أونلاين بسهولة</p>
 
+      {/* المميزات */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 10, marginBottom: 24, textAlign: "right" }}>
+        {[
+          { icon: "🛍️", text: "متجر احترافي بدقائق" },
+          { icon: "📦", text: "إدارة منتجات سهلة" },
+          { icon: "💬", text: "طلبات عبر واتساب" },
+          { icon: "📊", text: "إحصائيات مبيعاتك" },
+          { icon: "🔗", text: "رابط متجر خاص بك" },
+          { icon: "📱", text: "يشتغل على الموبايل" },
+        ].map((f, i) => (
+          <div key={i} style={{ background: "#ffffff08", borderRadius: 12, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 20 }}>{f.icon}</span>
+            <span style={{ fontSize: 13, color: "#ffffffcc", fontWeight: 600 }}>{f.text}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* الأسعار */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 24 }}>
+        <div style={{ background: "#ffffff10", borderRadius: 16, padding: "14px 10px", textAlign: "center", border: "1px solid #ffffff20" }}>
+          <div style={{ fontSize: 20, marginBottom: 6 }}>🎁</div>
+          <div style={{ fontWeight: 800, color: "#fff", fontSize: 13, marginBottom: 4 }}>تجريبي</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#00d4aa" }}>مجاني</div>
+          <div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>أسبوعين</div>
+        </div>
+        <div style={{ background: "#a855f722", borderRadius: 16, padding: "14px 10px", textAlign: "center", border: "1px solid #a855f744" }}>
+          <div style={{ fontSize: 20, marginBottom: 6 }}>📅</div>
+          <div style={{ fontWeight: 800, color: "#a855f7", fontSize: 13, marginBottom: 4 }}>شهري</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>50,000</div>
+          <div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>دينار / شهر</div>
+        </div>
+        <div style={{ background: "#ec489922", borderRadius: 16, padding: "14px 10px", textAlign: "center", border: "2px solid #ec489966", position: "relative" }}>
+          <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#ec4899,#a855f7)", borderRadius: 20, padding: "2px 10px", fontSize: 10, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}>⭐ الأفضل</div>
+          <div style={{ fontSize: 20, marginBottom: 6 }}>🏆</div>
+          <div style={{ fontWeight: 800, color: "#ec4899", fontSize: 13, marginBottom: 4 }}>سنوي</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>300,000</div>
+          <div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>دينار / سنة</div>
+        </div>
+      </div>
+
+      <button onClick={() => window.location.href = "/seller"} style={{ width: "100%", padding: "16px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 16, fontSize: 17, fontWeight: 900, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif", boxShadow: "0 8px 24px #ec489944" }}>
+        🚀 ابدأ تجربتك المجانية الآن
+      </button>
+    </div>
+  </div>
+</div>
       {/* فوتر */}
       <div style={{ textAlign: "center", padding: "40px 16px 20px", color: "#ffffff30", fontSize: 13 }}>
         وصلني — منصة التسوق والتوصيل 🛍️
