@@ -161,8 +161,11 @@ input, textarea { -webkit-user-select: text; user-select: text; }
           <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#ec4899,#a855f7)", borderRadius: 20, padding: "2px 10px", fontSize: 10, fontWeight: 700, color: "#fff", whiteSpace: "nowrap" }}>⭐ الأفضل</div>
           <div style={{ fontSize: 20, marginBottom: 6 }}>🏆</div>
           <div style={{ fontWeight: 800, color: "#ec4899", fontSize: 13, marginBottom: 4 }}>سنوي</div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>300,000</div>
-          <div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>دينار / سنة</div>
+         <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
+  <div style={{ fontSize: 14, fontWeight: 700, color: "#ffffff40", textDecoration: "line-through" }}>400,000</div>
+  <div style={{ fontSize: 18, fontWeight: 900, color: "#ec4899" }}>300,000</div>
+</div>
+<div style={{ fontSize: 11, color: "#ffffff50", marginTop: 4 }}>دينار / سنة</div>
         </div>
       </div>
 
