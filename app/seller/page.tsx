@@ -64,40 +64,47 @@ export default function SellerLogin() {
     }
   };
 
-  const handleRegister = async () => {
-    setLoading(true);
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
-    if (signUpError) { setError(signUpError.message); setStep("form"); setLoading(false); return; }
-    if (data.user) {
-      const slug = "store-" + Date.now().toString().slice(-6);
-      const now = new Date();
-      let subscription_end: string | null = null;
-      if (plan === "trial") {
-        const d = new Date(now); d.setDate(d.getDate() + 14);
-        subscription_end = d.toISOString();
-      } else if (plan === "monthly") {
-        const d = new Date(now); d.setMonth(d.getMonth() + 1);
-        subscription_end = d.toISOString();
-      } else if (plan === "yearly") {
-        const d = new Date(now); d.setFullYear(d.getFullYear() + 1);
-        subscription_end = d.toISOString();
-      }
-      await supabase.from("sellers").insert([{
-        user_id: data.user.id,
-        business_name: businessName,
-        phone,
-        city,
-        slug,
-is_active: plan === "trial",
-payment_status: plan === "trial" ? "trial" : "pending",
-        subscription_plan: plan,
-        subscription_end,
+const handleRegister = async () => {
+  setLoading(true);
+  const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+  if (signUpError) { setError(signUpError.message); setStep("form"); setLoading(false); return; }
 
-      }]);
-      window.location.href = "/seller/dashboard";
-    }
-    setLoading(false);
-  };
+  const userId = data.user?.id;
+  if (!userId) { setError("البريد الإلكتروني مسجل مسبقاً، حاول تسجيل الدخول"); setStep("form"); setLoading(false); return; }
+
+  // تحقق لو عنده row بـ sellers
+  const { data: existingSeller } = await supabase.from("sellers").select("id").eq("user_id", userId).single();
+  if (existingSeller) { window.location.href = "/seller/dashboard"; setLoading(false); return; }
+
+  const slug = "store-" + Date.now().toString().slice(-6);
+  const now = new Date();
+  let subscription_end: string | null = null;
+  if (plan === "trial") {
+    const d = new Date(now); d.setDate(d.getDate() + 14);
+    subscription_end = d.toISOString();
+  } else if (plan === "monthly") {
+    const d = new Date(now); d.setMonth(d.getMonth() + 1);
+    subscription_end = d.toISOString();
+  } else if (plan === "yearly") {
+    const d = new Date(now); d.setFullYear(d.getFullYear() + 1);
+    subscription_end = d.toISOString();
+  }
+
+  await supabase.from("sellers").insert([{
+    user_id: userId,
+    business_name: businessName,
+    phone,
+    city,
+    slug,
+    is_active: plan === "trial",
+    payment_status: plan === "trial" ? "trial" : "pending",
+    subscription_plan: plan,
+    subscription_end,
+  }]);
+
+  window.location.href = "/seller/dashboard";
+  setLoading(false);
+};
 
   const handleWhatsapp = () => {
     const planLabel = plan === "monthly" ? "الشهري (50,000 د.ع)" : "السنوي (400,000 د.ع)";
