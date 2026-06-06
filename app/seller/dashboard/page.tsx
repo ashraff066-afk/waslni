@@ -258,8 +258,21 @@ if (seller?.payment_status === "pending") return (
                     {o.status === "confirmed" ? "مؤكد" : o.status === "cancelled" ? "ملغي" : "انتظار"}
                   </span>
                 </div>
-                <div style={{ fontSize: 12, color: "#ffffff80", marginBottom: 8 }}>📍 {o.customer_address}</div>
-                <div style={{ fontSize: 13, color: "#ec4899", fontWeight: 700, marginBottom: 10 }}>💰 {o.total?.toLocaleString()} د.ع</div>
+               <div style={{ fontSize: 12, color: "#ffffff80", marginBottom: 8 }}>📍 {o.customer_address}</div>
+
+{/* المنتجات */}
+{o.items && o.items.length > 0 && (
+  <div style={{ background: "#ffffff08", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
+    {o.items.map((item: any, idx: number) => (
+      <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0", borderBottom: idx < o.items.length - 1 ? "1px solid #ffffff08" : "none" }}>
+        <span style={{ fontSize: 13, color: "#e2e8f0" }}>{item.name} <span style={{ color: "#ffffff50" }}>x{item.qty}</span></span>
+        <span style={{ fontSize: 13, color: "#ec4899", fontWeight: 700 }}>{(item.price * item.qty).toLocaleString()} د.ع</span>
+      </div>
+    ))}
+  </div>
+)}
+
+<div style={{ fontSize: 13, color: "#ec4899", fontWeight: 700, marginBottom: 10 }}>💰 المجموع: {o.total?.toLocaleString()} د.ع</div>
                 <div style={{ display: "flex", gap: 8 }}>
                   {o.status === "pending" && (
                     <button onClick={() => updateOrderStatus(o.id, "confirmed")} style={{ flex: 1, background: "#00d4aa22", border: "1px solid #00d4aa", borderRadius: 10, padding: "8px", color: "#00d4aa", fontSize: 13, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>✅ تأكيد</button>

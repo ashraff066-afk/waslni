@@ -153,6 +153,7 @@ if (orderSuccess) return (
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>{seller.business_name}</h1>
             <p style={{ fontSize: 12, color: "#ffffff60" }}>📍 {seller.city}</p>
+            <button onClick={() => window.location.href = "/track"} style={{ background: "transparent", border: "none", color: "#a855f7", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700, padding: 0, marginTop: 2 }}>📦 تتبع طلبك</button>
           </div>
           <button onClick={() => setShowCart(!showCart)} style={{ position: "relative", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, padding: "10px 16px", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>
             🛒 السلة
@@ -184,7 +185,7 @@ if (orderSuccess) return (
             {filteredProducts.map((p, i) => {
               const inCart = cart.find(c => c.id === p.id);
               return (
-                <div key={i} style={{ background: "#ffffff10", borderRadius: 16, overflow: "hidden", border: "1px solid #ffffff15" }}>
+<div key={i} onClick={() => window.location.href = `/shop/${slug}/product/${p.id}`} style={{ background: "#ffffff10", borderRadius: 16, overflow: "hidden", border: "1px solid #ffffff15", cursor: "pointer" }}>
                   {p.image_url ? (
                     <img src={p.image_url} alt={p.name} style={{ width: "100%", height: 140, objectFit: "cover" }} />
                   ) : (
