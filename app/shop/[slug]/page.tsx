@@ -196,7 +196,8 @@ export default function ShopPage() {
   const [wonPrize, setWonPrize] = useState<typeof PRIZES[0] | null>(null);
   const [savedOrderData, setSavedOrderData] = useState<any>(null); // لحفظ بيانات الطلب قبل الفرارة
  
- const SPINNER_THRESHOLD = 10;// 10,000 دينار
+ const SPINNER_THRESHOLD = 10;
+const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
  
   useEffect(() => {
     if (typeof window !== "undefined" && !window.location.search.includes("shop=1")) {
@@ -455,11 +456,26 @@ export default function ShopPage() {
       </div>
  
       {/* شريط تلميح الفرارة */}
-      {total > 0 && total < SPINNER_THRESHOLD && (
-        <div style={{ margin: "12px 16px 0", background: "#f59e0b15", border: "1px solid #f59e0b44", borderRadius: 12, padding: "10px 14px", fontSize: 12, color: "#f59e0b", fontWeight: 700, textAlign: "center" }}>
-          🎰 أضف {(SPINNER_THRESHOLD - total).toLocaleString()} د.ع للطلب وربح جائزة من فرارة الحظ!
-        </div>
-      )}
+      {total > 0 && total < FREE_SHIPPING_THRESHOLD && (
+  <div style={{ margin: "12px 16px 0", background: "#3b82f615", border: "1px solid #3b82f644", borderRadius: 12, padding: "10px 14px" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 12, color: "#ffffff80", fontWeight: 700 }}>
+      <span>🚚 توصيل مجاني</span>
+      <span>{total.toLocaleString()} / {FREE_SHIPPING_THRESHOLD.toLocaleString()} ألف</span>
+    </div>
+    <div style={{ background: "#ffffff15", borderRadius: 20, height: 8, overflow: "hidden" }}>
+      <div style={{ height: "100%", borderRadius: 20, background: "linear-gradient(90deg,#3b82f6,#06b6d4)", width: `${Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100)}%`, transition: "width 0.4s ease" }} />
+    </div>
+    <div style={{ fontSize: 11, color: "#3b82f6", fontWeight: 700, marginTop: 5, textAlign: "center" }}>
+      أضف {(FREE_SHIPPING_THRESHOLD - total).toLocaleString()} ألف دينار للتوصيل المجاني 🎉
+    </div>
+  </div>
+)}
+{total >= FREE_SHIPPING_THRESHOLD && (
+  <div style={{ margin: "12px 16px 0", background: "#3b82f622", border: "1px solid #3b82f6", borderRadius: 12, padding: "10px 14px", fontSize: 13, color: "#3b82f6", fontWeight: 700, textAlign: "center" }}>
+    🚚 مبروك! حصلت على توصيل مجاني!
+  </div>
+)}
+
       {total >= SPINNER_THRESHOLD && (
         <div style={{ margin: "12px 16px 0", background: "#ec489915", border: "1px solid #ec489944", borderRadius: 12, padding: "10px 14px", fontSize: 12, color: "#ec4899", fontWeight: 700, textAlign: "center" }}>
           🎰 مبروك! طلبك يؤهلك لفرارة الحظ عند التأكيد!
