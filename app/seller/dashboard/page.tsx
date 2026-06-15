@@ -35,9 +35,40 @@ const [settingsImage, setSettingsImage] = useState<File | null>(null);
 const [settingsDescription, setSettingsDescription] = useState("");
 const [savingSettings, setSavingSettings] = useState(false);
 const [settingsSaved, setSettingsSaved] = useState(false);
+const [discountCodes, setDiscountCodes] = useState<any[]>([]);
+const [newCode, setNewCode] = useState("");
+const [newCodePercent, setNewCodePercent] = useState(10);
+const [newCodeExpiry, setNewCodeExpiry] = useState("");
+const [addingCode, setAddingCode] = useState(false);
 
   useEffect(() => { checkUser(); }, []);
+const loadDiscountCodes = async () => {
+  if (!seller) return;
+  const { data } = await supabase.from("discount_codes").select("*").eq("seller_id", seller.id).order("created_at", { ascending: false });
+  setDiscountCodes(data || []);
+};
 
+const addDiscountCode = async () => {
+  if (!newCode.trim() || !newCodePercent) return;
+  setAddingCode(true);
+  await supabase.from("discount_codes").insert([{
+    seller_id: seller.id,
+    code: newCode.trim().toUpperCase(),
+    discount_percent: newCodePercent,
+    expires_at: newCodeExpiry || null,
+    is_active: true,
+  }]);
+  setNewCode("");
+  setNewCodePercent(10);
+  setNewCodeExpiry("");
+  setAddingCode(false);
+  loadDiscountCodes();
+};
+
+const deleteDiscountCode = async (id: string) => {
+  await supabase.from("discount_codes").update({ is_active: false }).eq("id", id);
+  loadDiscountCodes();
+};
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { window.location.href = "/seller"; return; }
@@ -262,7 +293,8 @@ if (seller?.payment_status === "pending") return (
           { id: "catalog", label: "🗂️ الكاتالوج" },
           { id: "add", label: "➕ إضافة" },
           { id: "stats", label: "📊 الإحصاء" },
-          { id: "settings", label: "⚙️ الإعدادات" },
+      { id: "settings", label: "⚙️ الإعدادات" },
+{ id: "discounts", label: "🎟️ الخصومات" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
         ))}
@@ -509,6 +541,44 @@ if (seller?.payment_status === "pending") return (
             </div>
           </div>
         )}
+        {/* DISCOUNTS */}
+{activeTab === "discounts" && (
+  <div>
+    <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15", marginBottom: 16 }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>🎟️ إضافة كود خصم</h3>
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>الكود</label>
+        <input type="text" placeholder="مثال: SUMMER20" value={newCode} onChange={e => setNewCode(e.target.value.toUpperCase())} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", letterSpacing: 2 }} />
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>نسبة الخصم %</label>
+        <input type="number" min="1" max="100" value={newCodePercent} onChange={e => setNewCodePercent(Number(e.target.value))} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>تاريخ الانتهاء (اختياري)</label>
+        <input type="date" value={newCodeExpiry} onChange={e => setNewCodeExpiry(e.target.value)} style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <button onClick={addDiscountCode} disabled={addingCode || !newCode.trim()} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+        {addingCode ? "جاري الإضافة..." : "➕ إضافة الكود"}
+      </button>
+    </div>
+
+<div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15" }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>📋 الأكواد الموجودة</h3>
+      {discountCodes.filter(c => c.is_active).length === 0 ? (
+        <div style={{ textAlign: "center", padding: 32, color: "#ffffff40", fontSize: 13 }}>ما في أكواد بعد</div>
+      ) : discountCodes.filter(c => c.is_active).map((c, i) => (
+        <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #ffffff10" }}>
+          <div>
+            <div style={{ fontWeight: 800, color: "#a855f7", fontSize: 15, letterSpacing: 1 }}>{c.code}</div>
+            <div style={{ fontSize: 12, color: "#ffffff60", marginTop: 2 }}>خصم {c.discount_percent}% {c.expires_at ? `— ينتهي ${c.expires_at}` : "— بدون انتهاء"}</div>
+          </div>
+          <button onClick={() => deleteDiscountCode(c.id)} style={{ background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "6px 12px", color: "#ef4444", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>حذف</button>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 {/* MODAL تعديل المنتج */}
 {editingProduct && (
   <div style={{ position: "fixed", inset: 0, background: "#000000bb", zIndex: 200, display: "flex", alignItems: "flex-end" }} onClick={() => setEditingProduct(null)}>
