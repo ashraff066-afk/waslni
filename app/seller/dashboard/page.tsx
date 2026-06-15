@@ -295,6 +295,7 @@ if (seller?.payment_status === "pending") return (
           { id: "stats", label: "📊 الإحصاء" },
       { id: "settings", label: "⚙️ الإعدادات" },
 { id: "discounts", label: "🎟️ الخصومات" },
+{ id: "bundles", label: "🎁 الباقات" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
         ))}
@@ -576,6 +577,49 @@ if (seller?.payment_status === "pending") return (
           <button onClick={() => deleteDiscountCode(c.id)} style={{ background: "#ef444422", border: "1px solid #ef4444", borderRadius: 8, padding: "6px 12px", color: "#ef4444", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>حذف</button>
         </div>
       ))}
+    </div>
+  </div>
+)}
+{/* BUNDLES */}
+{activeTab === "bundles" && (
+  <div>
+    <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15", marginBottom: 16 }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>🎁 إضافة باقة جديدة</h3>
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>اسم الباقة</label>
+        <input type="text" placeholder="مثال: شامبو + كريم" id="bundleName" style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>اختر المنتجات</label>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 200, overflowY: "auto" }}>
+          {products.map(p => (
+            <label key={p.id} style={{ display: "flex", alignItems: "center", gap: 10, background: "#ffffff08", borderRadius: 10, padding: "10px 12px", cursor: "pointer" }}>
+              <input type="checkbox" value={p.id} style={{ width: 16, height: 16, accentColor: "#ec4899" }} />
+              <span style={{ fontSize: 13, color: "#fff", flex: 1 }}>{p.name}</span>
+              <span style={{ fontSize: 12, color: "#ec4899", fontWeight: 700 }}>{p.price?.toLocaleString()} د.ع</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>السعر الأصلي (د.ع)</label>
+        <input type="number" min="0" id="bundleOriginal" placeholder="0" style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>سعر الباقة (د.ع)</label>
+<input type="number" min="0" id="bundlePrice" placeholder="0" style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      </div>
+      <button onClick={async () => {
+        const name = (document.getElementById("bundleName") as HTMLInputElement)?.value;
+        const original = Number((document.getElementById("bundleOriginal") as HTMLInputElement)?.value);
+        const price = Number((document.getElementById("bundlePrice") as HTMLInputElement)?.value);
+        const checked = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map((el: any) => el.value);
+        if (!name || !price || checked.length < 2) { alert("أدخل الاسم والسعر واختر منتجين على الأقل"); return; }
+        await supabase.from("bundles").insert([{ seller_id: seller.id, name, product_ids: checked, original_price: original, bundle_price: price, is_active: true }]);
+        alert("✅ تمت إضافة الباقة!");
+      }} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+        ➕ إضافة الباقة
+      </button>
     </div>
   </div>
 )}
