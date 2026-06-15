@@ -190,6 +190,7 @@ export default function ShopPage() {
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
 const [searchProduct, setSearchProduct] = useState("");
+const [bundles, setBundles] = useState<any[]>([]);
 const [discountCode, setDiscountCode] = useState("");
 const [discountValue, setDiscountValue] = useState(0);
 const [discountError, setDiscountError] = useState("");
@@ -229,7 +230,9 @@ const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
     const { data: catsData } = await supabase.from("categories").select("*").eq("seller_id", data[0].id).order("created_at", { ascending: true });
     setCategories(catsData || []);
     const { data: prodsData } = await supabase.from("products").select("*").eq("seller_id", data[0].id).order("created_at", { ascending: false });
-    setProducts(prodsData || []);
+setProducts(prodsData || []);
+const { data: bundlesData } = await supabase.from("bundles").select("*").eq("seller_id", data[0].id).eq("is_active", true);
+setBundles(bundlesData || []);
     setLoading(false);
   };
  
@@ -518,6 +521,25 @@ const finalTotal = total - discountAmount;
         ))}
       </div>
  
+{/* الباقات */}
+      {bundles.length > 0 && (
+        <div style={{ padding: "8px 16px 0" }}>
+          <div style={{ fontSize: 13, color: "#f59e0b", fontWeight: 800, marginBottom: 10 }}>🎁 عروض خاصة</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
+            {bundles.map((b, i) => (
+              <div key={i} style={{ background: "linear-gradient(135deg,#f59e0b15,#ec489915)", border: "1px solid #f59e0b44", borderRadius: 16, padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontWeight: 800, color: "#fff", fontSize: 14, marginBottom: 4 }}>🎁 {b.name}</div>
+                  <div style={{ fontSize: 12, color: "#ffffff60", textDecoration: "line-through" }}>{b.original_price?.toLocaleString()} د.ع</div>
+                  <div style={{ fontSize: 16, color: "#f59e0b", fontWeight: 900 }}>{b.bundle_price?.toLocaleString()} د.ع</div>
+                </div>
+                <button onClick={() => addToCart({ id: `bundle_${b.id}`, name: b.name, price: b.bundle_price, qty: 1 })} style={{ padding: "10px 16px", background: "linear-gradient(135deg,#f59e0b,#ec4899)", border: "none", borderRadius: 12, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>أضف للسلة</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* المنتجات */}
       <div style={{ padding: "8px 16px" }}>
         {filteredProducts.length === 0 ? (
