@@ -189,7 +189,11 @@ export default function ShopPage() {
   const [ordering, setOrdering] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
-  const [searchProduct, setSearchProduct] = useState("");
+const [searchProduct, setSearchProduct] = useState("");
+const [discountCode, setDiscountCode] = useState("");
+const [discountValue, setDiscountValue] = useState(0);
+const [discountError, setDiscountError] = useState("");
+const [discountApplied, setDiscountApplied] = useState(false);
  
   // === فرارة الحظ ===
   const [showSpinner, setShowSpinner] = useState(false);
@@ -243,9 +247,33 @@ const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
     setCart(prev => prev.map(i => i.id === id ? { ...i, qty } : i));
   };
  
-  const total = cart.reduce((a, i) => a + i.price * i.qty, 0);
+const total = cart.reduce((a, i) => a + i.price * i.qty, 0);
+const discountAmount = discountApplied ? Math.round(total * discountValue / 100) : 0;
+const finalTotal = total - discountAmount;
   const cartCount = cart.reduce((a, i) => a + i.qty, 0);
- 
+ const applyDiscountCode = async () => {
+  if (!discountCode.trim()) return;
+  setDiscountError("");
+  const { data, error } = await supabase
+    .from("discount_codes")
+    .select("*")
+    .eq("seller_id", seller.id)
+    .eq("code", discountCode.trim().toUpperCase())
+    .eq("is_active", true)
+    .limit(1);
+  if (error || !data || data.length === 0) {
+    setDiscountError("كود غير صحيح أو منتهي");
+    return;
+  }
+  const dc = data[0];
+  if (dc.expires_at && new Date(dc.expires_at) < new Date()) {
+    setDiscountError("هذا الكود منتهي الصلاحية");
+    return;
+  }
+  setDiscountValue(dc.discount_percent);
+  setDiscountApplied(true);
+  setDiscountError("");
+};
   const placeOrder = async () => {
     if (!customerName || !customerPhone || !customerAddress) { alert("يرجى إدخال جميع البيانات"); return; }
     if (customerPhone.replace(/\s/g, '').length !== 11) { alert("رقم الهاتف يجب أن يكون 11 رقم"); return; }
@@ -547,7 +575,10 @@ const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
                 ))}
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "14px 0", borderTop: "2px solid #ffffff20", marginTop: 8 }}>
                   <span style={{ fontWeight: 700, color: "#fff", fontSize: 16 }}>المجموع</span>
-                  <span style={{ fontWeight: 900, color: "#ec4899", fontSize: 18 }}>{total.toLocaleString()} د.ع</span>
+   <div style={{ textAlign: "left" }}>
+  {discountApplied && <div style={{ fontSize: 12, color: "#ffffff60", textDecoration: "line-through" }}>{total.toLocaleString()} ألف د.ع</div>}
+  <span style={{ fontWeight: 900, color: "#ec4899", fontSize: 18 }}>{finalTotal.toLocaleString()} ألف د.ع</span>
+</div>
                 </div>
  
                 {/* تلميح الفرارة داخل السلة */}
@@ -558,6 +589,21 @@ const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
                 )}
  
                 <div style={{ marginTop: 16 }}>
+                  <div style={{ marginBottom: 16 }}>
+  <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 10, fontSize: 14 }}>🎟️ كود الخصم</h4>
+  {!discountApplied ? (
+    <div style={{ display: "flex", gap: 8 }}>
+      <input type="text" placeholder="أدخل كود الخصم..." value={discountCode} onChange={e => { setDiscountCode(e.target.value); setDiscountError(""); }} style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 13, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+      <button onClick={applyDiscountCode} style={{ padding: "10px 16px", background: "linear-gradient(135deg,#a855f7,#ec4899)", border: "none", borderRadius: 10, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>تطبيق</button>
+    </div>
+  ) : (
+    <div style={{ background: "#a855f722", border: "1px solid #a855f7", borderRadius: 10, padding: "10px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <span style={{ color: "#a855f7", fontWeight: 700, fontSize: 13 }}>✅ خصم {discountValue}% — وفّرت {discountAmount.toLocaleString()} ألف د.ع</span>
+      <button onClick={() => { setDiscountApplied(false); setDiscountCode(""); setDiscountValue(0); }} style={{ background: "none", border: "none", color: "#ffffff60", cursor: "pointer", fontSize: 12 }}>إلغاء</button>
+    </div>
+  )}
+  {discountError && <div style={{ color: "#ef4444", fontSize: 12, marginTop: 6, fontWeight: 700 }}>{discountError}</div>}
+</div>
                   <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 12, fontSize: 14 }}>📋 بيانات التوصيل</h4>
                   <input type="text" placeholder="اسمك الكامل" value={customerName} onChange={e => setCustomerName(e.target.value)} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
                   <input type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
