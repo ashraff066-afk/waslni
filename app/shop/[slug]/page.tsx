@@ -196,7 +196,7 @@ export default function ShopPage() {
   const [wonPrize, setWonPrize] = useState<typeof PRIZES[0] | null>(null);
   const [savedOrderData, setSavedOrderData] = useState<any>(null); // لحفظ بيانات الطلب قبل الفرارة
  
-  const SPINNER_THRESHOLD = 10000; // 10,000 دينار
+ const SPINNER_THRESHOLD = 10;// 10,000 دينار
  
   useEffect(() => {
     if (typeof window !== "undefined" && !window.location.search.includes("shop=1")) {
