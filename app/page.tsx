@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
  
 const STORE_SLUG = "store-677913";
-const adImages: string[] = [
-  // أضف روابط صورك هنا
-  // "https://...",
-];
+const [adImages, setAdImages] = useState<string[]>([]);
  
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -17,6 +14,8 @@ export default function Home() {
       if (!seller) return;
       supabase.from("products").select("*").eq("seller_id", seller.id).not("image_url", "is", null).order("created_at", { ascending: false }).limit(8)
         .then(({ data }) => setProducts(data || []));
+      supabase.from("ads").select("image_url").eq("seller_id", seller.id).eq("is_active", true)
+        .then(({ data }) => setAdImages((data || []).map((a: any) => a.image_url)));
     });
   }, []);
  
