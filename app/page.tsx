@@ -66,12 +66,12 @@ export default function Home() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg,#ec4899,#a855f7)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>💄</div>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>كوزمتك نورهان</div>
-            <div style={{ fontSize: 11, color: "#ffffff60" }}>متجر مستحضرات التجميل</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: "#fff" }}>شوبلي كوزمتك</div>
+            <div style={{ fontSize: 11, color: "#ffffff60" }}>متجرك للتجميل والعناية</div>
           </div>
         </div>
         <button onClick={() => window.location.href = `/shop/${STORE_SLUG}?shop=1`} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, padding: "10px 18px", color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>
-          🛍️ تسوقي الحين
+          🛍️ تسوقي الان    
         </button>
       </div>
  
@@ -88,7 +88,7 @@ export default function Home() {
             اكتشفي أجمل منتجات التجميل والعناية بأفضل الأسعار مع توصيل سريع لبابك 🌸
           </p>
           <button onClick={() => window.location.href = `/shop/${STORE_SLUG}?shop=1`} style={{ background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 16, padding: "15px 36px", color: "#fff", fontSize: 16, fontWeight: 900, cursor: "pointer", fontFamily: "Tajawal,sans-serif", boxShadow: "0 8px 32px #ec489944", animation: "pulse 2s infinite" }}>
-            🛍️ تسوقي الحين
+            🛍️ تسوقي الان
           </button>
         </div>
       </div>
@@ -146,7 +146,7 @@ export default function Home() {
  
       {/* فوتر */}
       <div style={{ textAlign: "center", padding: "20px 16px", color: "#ffffff30", fontSize: 12 }}>
-        كوزمتك نورهان 💄 — جميع الحقوق محفوظة
+        شوبلي كوزمتك 💄 — جميع الحقوق محفوظة
       </div>
     </div>
   );
