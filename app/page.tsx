@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
  
 const STORE_SLUG = "store-677913";
+const adImages: string[] = [
+  // أضف روابط صورك هنا
+  // "https://...",
+];
  
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -74,7 +78,17 @@ export default function Home() {
           🛍️ تسوقي الان    
         </button>
       </div>
- 
+ {/* قسم الإعلانات */}
+      <div style={{ padding: "16px 20px 0" }}>
+        <div style={{ fontSize: 13, color: "#ffffff60", fontWeight: 700, marginBottom: 10 }}>🌟 عروضنا الحصرية</div>
+        <div style={{ display: "flex", gap: 10, overflowX: "auto", scrollbarWidth: "none", scrollSnapType: "x mandatory" }}>
+          {adImages.map((img, i) => (
+            <div key={i} style={{ flexShrink: 0, width: "85vw", maxWidth: 360, borderRadius: 18, overflow: "hidden", scrollSnapAlign: "start", border: "1px solid #ffffff15" }}>
+              <img src={img} alt={`إعلان ${i+1}`} style={{ width: "100%", height: 180, objectFit: "cover" }} />
+            </div>
+          ))}
+        </div>
+      </div>
       {/* هيرو */}
       <div style={{ position: "relative", overflow: "hidden", padding: "48px 20px 40px", textAlign: "center", background: "linear-gradient(135deg,#2d0a1e,#1a0a2e)" }}>
         <div style={{ position: "absolute", top: -60, right: -60, width: 200, height: 200, borderRadius: "50%", background: "#ec489915", filter: "blur(40px)" }} />
