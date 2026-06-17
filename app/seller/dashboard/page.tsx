@@ -83,10 +83,9 @@ loadDiscountCodes();
     if (sellerData.payment_status === "pending") {
   setSeller(sellerData);
 setLoading(false);
-loadAds(sellerData.id);
-  return;
-}
-    if (sellerData.payment_status === "pending") {
+return;
+  }
+      if (sellerData.payment_status === "pending") {
   setLoading(false);
   setSeller(sellerData);
   return;
@@ -113,6 +112,7 @@ setThisMonth((ordersData || []).filter((o: any) => {
   return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
 }));
     setLoading(false);
+    loadAds(sellerData.id);
   };
 
   const addCategory = async () => {
