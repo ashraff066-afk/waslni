@@ -191,6 +191,8 @@ export default function ShopPage() {
   const [orderNumber, setOrderNumber] = useState("");
 const [searchProduct, setSearchProduct] = useState("");
 const [bundles, setBundles] = useState<any[]>([]);
+const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+const [usingPoints, setUsingPoints] = useState(false);
 const [discountCode, setDiscountCode] = useState("");
 const [discountValue, setDiscountValue] = useState(0);
 const [discountError, setDiscountError] = useState("");
@@ -252,8 +254,20 @@ setBundles(bundlesData || []);
  
 const total = cart.reduce((a, i) => a + i.price * i.qty, 0);
 const discountAmount = discountApplied ? Math.round(total * discountValue / 100) : 0;
-const finalTotal = total - discountAmount;
+const pointsDiscount = usingPoints ? 5 : 0;
+const finalTotal = total - discountAmount - pointsDiscount;
   const cartCount = cart.reduce((a, i) => a + i.qty, 0);
+  const loadLoyaltyPoints = async (phone: string) => {
+  if (!phone || !seller) return;
+  const { data } = await supabase.from("loyalty_points").select("points").eq("seller_id", seller.id).eq("customer_phone", phone).limit(1);
+  setLoyaltyPoints(data?.[0]?.points || 0);
+};
+
+const usePointsDiscount = () => {
+  if (loyaltyPoints < 500) { alert(`نقاطك الحالية ${loyaltyPoints} — تحتاج 500 نقطة للحصول على خصم`); return; }
+  if (discountApplied) { alert("يوجد كود خصم مفعّل — استخدم إما الكود أو النقاط"); return; }
+  setUsingPoints(true);
+};
  const applyDiscountCode = async () => {
   if (!discountCode.trim()) return;
   setDiscountError("");
@@ -338,8 +352,19 @@ const finalTotal = total - discountAmount;
       window.open(`https://wa.me/${seller.phone?.replace(/^0/, "964")}?text=${encodeURIComponent(msg)}`, "_blank");
       setOrderNumber(oNumber);
       setOrderSuccess(true);
-      setCart([]);
-      localStorage.removeItem(`cart_${slug}`);
+setCart([]);
+localStorage.removeItem(`cart_${slug}`);
+// تحديث نقاط الولاء
+const earnedPoints = Math.floor(finalTotal * 10);
+const phone = savedOrderData?.customerPhone ?? customerPhone;
+const { data: existing } = await supabase.from("loyalty_points").select("*").eq("seller_id", seller.id).eq("customer_phone", phone).limit(1);
+if (existing && existing.length > 0) {
+  const newPoints = usingPoints ? (existing[0].points - 500 + earnedPoints) : (existing[0].points + earnedPoints);
+  await supabase.from("loyalty_points").update({ points: Math.max(0, newPoints), updated_at: new Date().toISOString() }).eq("id", existing[0].id);
+} else {
+  await supabase.from("loyalty_points").insert([{ seller_id: seller.id, customer_phone: phone, points: earnedPoints }]);
+}
+setUsingPoints(false);
     } else {
       alert("حدث خطأ، حاول مجدداً");
     }
@@ -624,11 +649,41 @@ const finalTotal = total - discountAmount;
       <button onClick={() => { setDiscountApplied(false); setDiscountCode(""); setDiscountValue(0); }} style={{ background: "none", border: "none", color: "#ffffff60", cursor: "pointer", fontSize: 12 }}>إلغاء</button>
     </div>
   )}
-  {discountError && <div style={{ color: "#ef4444", fontSize: 12, marginTop: 6, fontWeight: 700 }}>{discountError}</div>}
+{discountError && <div style={{ color: "#ef4444", fontSize: 12, marginTop: 6, fontWeight: 700 }}>{discountError}</div>}
+</div>
+
+<div style={{ marginBottom: 16 }}>
+  <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 10, fontSize: 14 }}>⭐ نقاط الولاء</h4>
+  {customerPhone.replace(/\s/g, '').length === 11 ? (
+    <div style={{ background: "#ffffff08", borderRadius: 10, padding: "10px 14px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>نقاطك: <span style={{ color: "#f59e0b" }}>{loyaltyPoints}</span> / 500</div>
+          <div style={{ fontSize: 11, color: "#ffffff60", marginTop: 2 }}>
+            {loyaltyPoints >= 500 ? "🎉 يمكنك استخدام نقاطك!" : `تحتاج ${500 - loyaltyPoints} نقطة للخصم`}
+          </div>
+        </div>
+        {loyaltyPoints >= 500 && !usingPoints && !discountApplied && (
+          <button onClick={usePointsDiscount} style={{ padding: "8px 14px", background: "linear-gradient(135deg,#f59e0b,#ec4899)", border: "none", borderRadius: 10, color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "Tajawal,sans-serif" }}>استخدم</button>
+        )}
+        {usingPoints && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 12, color: "#f59e0b", fontWeight: 700 }}>✅ خصم 5,000 د.ع</span>
+            <button onClick={() => setUsingPoints(false)} style={{ background: "none", border: "none", color: "#ffffff60", cursor: "pointer", fontSize: 12 }}>إلغاء</button>
+          </div>
+        )}
+      </div>
+      <div style={{ background: "#ffffff15", borderRadius: 20, height: 6, overflow: "hidden", marginTop: 8 }}>
+        <div style={{ height: "100%", borderRadius: 20, background: "linear-gradient(90deg,#f59e0b,#ec4899)", width: `${Math.min((loyaltyPoints / 500) * 100, 100)}%`, transition: "width 0.4s ease" }} />
+      </div>
+    </div>
+  ) : (
+    <div style={{ fontSize: 12, color: "#ffffff40", textAlign: "center" }}>أدخل رقم هاتفك لعرض نقاطك</div>
+  )}
 </div>
                   <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 12, fontSize: 14 }}>📋 بيانات التوصيل</h4>
                   <input type="text" placeholder="اسمك الكامل" value={customerName} onChange={e => setCustomerName(e.target.value)} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
-                  <input type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
+                  <input type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone} onChange={e => { setCustomerPhone(e.target.value); if (e.target.value.replace(/\s/g, '').length === 11) loadLoyaltyPoints(e.target.value); }}style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
                   <textarea placeholder="عنوان التوصيل بالتفصيل..." value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} rows={2} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", resize: "none", marginBottom: 14 }} />
                   <button onClick={placeOrder} disabled={ordering} style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 16, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
                     {ordering ? "جاري الطلب..." : total >= SPINNER_THRESHOLD ? "🎰 تأكيد الطلب وافرّ الفرارة!" : "✅ تأكيد الطلب"}
