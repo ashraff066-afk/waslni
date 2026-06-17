@@ -36,12 +36,18 @@ const [settingsDescription, setSettingsDescription] = useState("");
 const [savingSettings, setSavingSettings] = useState(false);
 const [settingsSaved, setSettingsSaved] = useState(false);
 const [discountCodes, setDiscountCodes] = useState<any[]>([]);
+const [ads, setAds] = useState<any[]>([]);
 const [newCode, setNewCode] = useState("");
 const [newCodePercent, setNewCodePercent] = useState(10);
 const [newCodeExpiry, setNewCodeExpiry] = useState("");
 const [addingCode, setAddingCode] = useState(false);
 
   useEffect(() => { checkUser(); }, []);
+  const loadAds = async () => {
+  if (!seller) return;
+  const { data } = await supabase.from("ads").select("*").eq("seller_id", seller.id).eq("is_active", true);
+  setAds(data || []);
+};
 const loadDiscountCodes = async () => {
   if (!seller) return;
   const { data } = await supabase.from("discount_codes").select("*").eq("seller_id", seller.id).order("created_at", { ascending: false });
@@ -63,11 +69,13 @@ const addDiscountCode = async () => {
   setNewCodeExpiry("");
   setAddingCode(false);
   loadDiscountCodes();
+loadAds();
 };
 
 const deleteDiscountCode = async (id: string) => {
   await supabase.from("discount_codes").update({ is_active: false }).eq("id", id);
   loadDiscountCodes();
+loadAds();
 };
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -296,6 +304,7 @@ if (seller?.payment_status === "pending") return (
       { id: "settings", label: "⚙️ الإعدادات" },
 { id: "discounts", label: "🎟️ الخصومات" },
 { id: "bundles", label: "🎁 الباقات" },
+{ id: "ads", label: "📢 الإعلانات" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
         ))}
@@ -620,6 +629,48 @@ if (seller?.payment_status === "pending") return (
       }} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
         ➕ إضافة الباقة
       </button>
+    </div>
+  </div>
+)}
+{/* ADS */}
+{activeTab === "ads" && (
+  <div>
+    <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15", marginBottom: 16 }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>📢 إضافة إعلان جديد</h3>
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>صورة الإعلان</label>
+        <input type="file" accept="image/*" id="adImage" style={{ width: "100%", padding: "10px", borderRadius: 12, background: "#ffffff15", border: "1px dashed #ec489966", color: "#fff", fontSize: 13, fontFamily: "Tajawal,sans-serif", cursor: "pointer" }} />
+      </div>
+      <button onClick={async () => {
+        const fileInput = document.getElementById("adImage") as HTMLInputElement;
+        const file = fileInput?.files?.[0];
+        if (!file) { alert("اختر صورة أول"); return; }
+        const ext = file.name.split(".").pop();
+        const path = `ads/${seller.id}/${Date.now()}.${ext}`;
+        const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: true });
+        if (error) { alert("فشل رفع الصورة"); return; }
+        const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+        await supabase.from("ads").insert([{ seller_id: seller.id, image_url: data.publicUrl, is_active: true }]);
+        alert("✅ تم إضافة الإعلان!");
+        checkUser();
+      }} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+        ➕ رفع الإعلان
+      </button>
+    </div>
+
+    <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15" }}>
+      <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>📋 إعلاناتك</h3>
+      {ads.length === 0 ? (
+        <div style={{ textAlign: "center", padding: 32, color: "#ffffff40", fontSize: 13 }}>ما في إعلانات بعد</div>
+      ) : ads.map((a: any, i: number) => (
+        <div key={i} style={{ marginBottom: 12, borderRadius: 12, overflow: "hidden", position: "relative" }}>
+          <img src={a.image_url} alt="" style={{ width: "100%", height: 140, objectFit: "cover" }} />
+          <button onClick={async () => {
+            await supabase.from("ads").update({ is_active: false }).eq("id", a.id);
+            checkUser();
+          }} style={{ position: "absolute", top: 8, left: 8, background: "#ef444488", border: "none", borderRadius: 8, padding: "4px 10px", color: "#fff", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>حذف</button>
+        </div>
+      ))}
     </div>
   </div>
 )}
