@@ -43,9 +43,8 @@ const [newCodeExpiry, setNewCodeExpiry] = useState("");
 const [addingCode, setAddingCode] = useState(false);
 
   useEffect(() => { checkUser(); }, []);
-  const loadAds = async () => {
-  if (!seller) return;
-  const { data } = await supabase.from("ads").select("*").eq("seller_id", seller.id).eq("is_active", true);
+  const loadAds = async (sellerId: string) => {
+  const { data } = await supabase.from("ads").select("*").eq("seller_id", sellerId).eq("is_active", true);
   setAds(data || []);
 };
 const loadDiscountCodes = async () => {
@@ -68,14 +67,12 @@ const addDiscountCode = async () => {
   setNewCodePercent(10);
   setNewCodeExpiry("");
   setAddingCode(false);
-  loadDiscountCodes();
-loadAds();
+loadDiscountCodes();
 };
 
 const deleteDiscountCode = async (id: string) => {
   await supabase.from("discount_codes").update({ is_active: false }).eq("id", id);
-  loadDiscountCodes();
-loadAds();
+loadDiscountCodes();
 };
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -84,7 +81,8 @@ loadAds();
     if (!sellerData) { window.location.href = "/seller"; return; }
     if (sellerData.payment_status === "pending") {
   setSeller(sellerData);
-  setLoading(false);
+setLoading(false);
+loadAds(sellerData.id);
   return;
 }
     if (sellerData.payment_status === "pending") {
