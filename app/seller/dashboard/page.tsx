@@ -44,7 +44,8 @@ const [addingCode, setAddingCode] = useState(false);
 
   useEffect(() => { checkUser(); }, []);
   const loadAds = async (sellerId: string) => {
-  const { data } = await supabase.from("ads").select("*").eq("seller_id", sellerId).eq("is_active", true);
+  const { data, error } = await supabase.from("ads").select("*").eq("seller_id", sellerId);
+  console.log("ads data:", data, "error:", error);
   setAds(data || []);
 };
 const loadDiscountCodes = async () => {
