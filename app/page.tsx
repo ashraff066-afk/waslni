@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
  
 const STORE_SLUG = "store-677913";
-const [adImages, setAdImages] = useState<string[]>([]);
  
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+const [adImages, setAdImages] = useState<string[]>([]);
  
   useEffect(() => {
     supabase.from("sellers").select("id").eq("slug", STORE_SLUG).single().then(({ data: seller }) => {
