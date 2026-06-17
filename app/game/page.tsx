@@ -35,22 +35,22 @@ interface SavedState {
 
 // ─────────────────── Config ───────────────────
 const BUILDING_DEFS: BuildingDef[] = [
-  { id: "mine",    name: "فE�E�فE,  emoji: "⛏︁E,  baseCost: 50,    baseIncome: 0.5,  description: "يستخرج افE�فE� ببطء فE�E�EباستفE�ار" },
-  { id: "farm",    name: "فE�رعة", emoji: "🌾",  baseCost: 200,   baseIncome: 2,    description: "تفE�ج ثروة أفE�ر فE�EافE�E�E�فE },
-  { id: "market",  name: "سوفE,   emoji: "🏪",  baseCost: 800,   baseIncome: 8,    description: "افE�جارة فE�بحة جدافE },
-  { id: "factory", name: "فE�فE�",  emoji: "🏭",  baseCost: 3000,  baseIncome: 30,   description: "إفE�اج صفE�عفEضخفE },
-  { id: "bank",    name: "بفE�E,   emoji: "🏦",  baseCost: 12000, baseIncome: 100,  description: "اجعفEذفE�فEيوفE�د ذفE�افE },
+  { id: "mine",    name: "منجم",  emoji: "⛏️",  baseCost: 50,    baseIncome: 0.5,  description: "يستخرج الذهب ببطء لكن باستمرار" },
+  { id: "farm",    name: "مزرعة", emoji: "🌾",  baseCost: 200,   baseIncome: 2,    description: "تنتج ثروة أكثر من المنجم" },
+  { id: "market",  name: "سوق",   emoji: "🏪",  baseCost: 800,   baseIncome: 8,    description: "التجارة مربحة جداً" },
+  { id: "factory", name: "مصنع",  emoji: "🏭",  baseCost: 3000,  baseIncome: 30,   description: "إنتاج صناعي ضخم" },
+  { id: "bank",    name: "بنك",   emoji: "🏦",  baseCost: 12000, baseIncome: 100,  description: "اجعل ذهبك يولّد ذهباً" },
 ];
 
 const UPGRADE_DEFS: UpgradeDef[] = [
-  { id: "pick2",        name: "فE�س فE�سّفE�",      description: "افE�E�ر يعطفE2ÁEذفE�",           cost: 100    },
-  { id: "pick5",        name: "فE�س افE�بير",       description: "افE�E�ر يعطفE5ÁEذفE�",           cost: 500,  requires: "pick2"    },
-  { id: "pick10",       name: "فE�س افE�سطورة",     description: "افE�E�ر يعطفE10ÁEذفE�",          cost: 50, gemCost: 30, requires: "pick5" },
-  { id: "mine2",        name: "فE�فE�رات افE�E�E�فE,    description: "افE�E�E�فEيفE�ج 2ÁEأفE�ر",         cost: 200    },
-  { id: "farm2",        name: "رفEفE�طور",          description: "افE�E�رعة تفE�ج 2ÁEأفE�ر",        cost: 600    },
-  { id: "market2",      name: "طرفEتجارية",        description: "افE�وفEيفE�ج 2ÁEأفE�ر",          cost: 2000   },
-  { id: "factory2",     name: "أتفE�ة افE�E�فE�",      description: "افE�E�فE� يفE�ج 2ÁEأفE�ر",         cost: 8000   },
-  { id: "all2",         name: "افE�E�E�ة افE�فE�ية",    description: "جفE�ع افE�E�افE�EتفE�ج 2ÁEأفE�ر",   cost: 100, gemCost: 50 },
+  { id: "pick2",        name: "فأس محسّنة",      description: "النقر يعطي 2× ذهب",           cost: 100    },
+  { id: "pick5",        name: "فأس الخبير",       description: "النقر يعطي 5× ذهب",           cost: 500,  requires: "pick2"    },
+  { id: "pick10",       name: "فأس الأسطورة",     description: "النقر يعطي 10× ذهب",          cost: 50, gemCost: 30, requires: "pick5" },
+  { id: "mine2",        name: "متفجرات المنجم",    description: "المنجم ينتج 2× أكثر",         cost: 200    },
+  { id: "farm2",        name: "ري متطور",          description: "المزرعة تنتج 2× أكثر",        cost: 600    },
+  { id: "market2",      name: "طرق تجارية",        description: "السوق ينتج 2× أكثر",          cost: 2000   },
+  { id: "factory2",     name: "أتمتة المصنع",      description: "المصنع ينتج 2× أكثر",         cost: 8000   },
+  { id: "all2",         name: "اللمسة الذهبية",    description: "جميع المباني تنتج 2× أكثر",   cost: 100, gemCost: 50 },
 ];
 
 const AD_COOLDOWN_SEC = 30;
@@ -58,12 +58,12 @@ const BOOST_DURATION_SEC = 60;
 const AD_WATCH_SEC = 5;
 
 const AD_REWARDS = [
-  { type: "gold",  label: "💰 500 ذفE�",       gold: 500,  gems: 0 },
-  { type: "gold",  label: "💰 1000 ذفE�",      gold: 1000, gems: 0 },
-  { type: "gems",  label: "💎 30 جوفE�ة",       gold: 0,    gems: 30 },
-  { type: "gems",  label: "💎 60 جوفE�ة",       gold: 0,    gems: 60 },
-  { type: "boost", label: "⚡ 2ÁEفE�E�ة دقيقة",  gold: 200,  gems: 0 },
-  { type: "big",   label: "🎁 حزفE� فE�يرة",     gold: 800,  gems: 20 },
+  { type: "gold",  label: "💰 500 ذهب",       gold: 500,  gems: 0 },
+  { type: "gold",  label: "💰 1000 ذهب",      gold: 1000, gems: 0 },
+  { type: "gems",  label: "💎 30 جوهرة",       gold: 0,    gems: 30 },
+  { type: "gems",  label: "💎 60 جوهرة",       gold: 0,    gems: 60 },
+  { type: "boost", label: "⚡ 2× لمدة دقيقة",  gold: 200,  gems: 0 },
+  { type: "big",   label: "🎁 حزمة كبيرة",     gold: 800,  gems: 20 },
 ];
 
 // ─────────────────── Helpers ───────────────────
@@ -72,9 +72,9 @@ function buildingCost(def: BuildingDef, owned: number) {
 }
 
 function formatNum(n: number): string {
-  if (n >= 1e9) return (n / 1e9).toFixed(2) + " فE�E�ار";
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + " فE�E�وفE;
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + " أفE�E;
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + " مليار";
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + " مليون";
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + " ألف";
   return Math.floor(n).toLocaleString("ar");
 }
 
@@ -284,8 +284,8 @@ export default function GamePage() {
 
   if (!loaded) {
     return (
-      <div style={{ minHeight: "100dvh", background: "linear-gradient(135deg,#1a0f0a,#0f0a05)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ color: "#d4a853", fontSize: 28, fontWeight: 900, fontFamily: "Tajawal, Cairo, sans-serif" }}>جارفEافE�حفE�فE..</div>
+      <div style={{ minHeight: "100dvh", background: "linear-gradient(135deg,#1a0a12,#150a1e)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#ec4899", fontSize: 28, fontWeight: 900, fontFamily: "Tajawal, Cairo, sans-serif" }}>جاري التحميل...</div>
       </div>
     );
   }
@@ -293,7 +293,7 @@ export default function GamePage() {
   const styles = {
     page: {
       minHeight: "100dvh",
-      background: "linear-gradient(135deg,#1a0f0a 0%,#0f0a05 100%)",
+      background: "linear-gradient(135deg,#1a0a12 0%,#150a1e 100%)",
       color: "#fff",
       fontFamily: "Tajawal, Cairo, sans-serif",
       direction: "rtl" as const,
@@ -322,7 +322,7 @@ export default function GamePage() {
       alignItems: "center",
       minWidth: 80,
     },
-    statLabel: { fontSize: 10, color: "#f9a8d4", fontWeight: 700, marginBottom: 2 },
+    statLabel: { fontSize: 10, color: "#a855f7", fontWeight: 700, marginBottom: 2 },
     statValue: { fontSize: 16, fontWeight: 900, color: "#fbbf24" },
     statGps: { fontSize: 11, color: "#6ee7b7" },
     mainArea: {
@@ -339,7 +339,7 @@ export default function GamePage() {
       width: 160,
       height: 160,
       borderRadius: "50%",
-      border: "4px solid #d4a853",
+      border: "4px solid #ec4899",
       background: "radial-gradient(circle at 35% 35%,#fbbf24,#f59e0b,#b45309)",
       fontSize: 70,
       cursor: "pointer",
@@ -353,7 +353,7 @@ export default function GamePage() {
       userSelect: "none" as const,
     },
     boostBadge: {
-      background: "linear-gradient(90deg,#7c3aed,#d4a853)",
+      background: "linear-gradient(90deg,#7c3aed,#ec4899)",
       borderRadius: 20,
       padding: "6px 16px",
       fontSize: 13,
@@ -370,7 +370,7 @@ export default function GamePage() {
     adBtn: (disabled: boolean) => ({
       background: disabled
         ? "rgba(255,255,255,0.1)"
-        : "linear-gradient(135deg,#7c3aed,#d4a853)",
+        : "linear-gradient(135deg,#7c3aed,#ec4899)",
       border: "none",
       borderRadius: 16,
       color: disabled ? "#888" : "#fff",
@@ -400,8 +400,8 @@ export default function GamePage() {
       alignItems: "center",
       gap: 2,
       cursor: "pointer",
-      borderTop: active ? "2px solid #d4a853" : "2px solid transparent",
-      color: active ? "#d4a853" : "#888",
+      borderTop: active ? "2px solid #ec4899" : "2px solid transparent",
+      color: active ? "#ec4899" : "#888",
       fontSize: 10,
       fontWeight: 700,
       background: "none",
@@ -437,7 +437,7 @@ export default function GamePage() {
       fontWeight: 700,
       fontSize: 14,
     }),
-    cardCount: { fontSize: 11, color: "#f9a8d4", marginTop: 2 },
+    cardCount: { fontSize: 11, color: "#a855f7", marginTop: 2 },
     overlay: {
       position: "fixed" as const,
       inset: 0,
@@ -461,9 +461,9 @@ export default function GamePage() {
   };
 
   const tabs = [
-    { id: "game" as const, emoji: "🏠", label: "افE�E�بة" },
-    { id: "buildings" as const, emoji: "🏗�E�E, label: "افE�E�افE�E },
-    { id: "upgrades" as const, emoji: "⬁E��E, label: "افE�رقيات" },
+    { id: "game" as const, emoji: "🏠", label: "اللعبة" },
+    { id: "buildings" as const, emoji: "🏗️", label: "المباني" },
+    { id: "upgrades" as const, emoji: "⬆️", label: "الترقيات" },
     { id: "stats" as const, emoji: "📊", label: "إحصائيات" },
   ];
 
@@ -472,18 +472,18 @@ export default function GamePage() {
       {/* Header stats */}
       <div style={styles.header}>
         <div style={styles.statBox}>
-          <span style={styles.statLabel}>💰 افE�فE�</span>
+          <span style={styles.statLabel}>💰 الذهب</span>
           <span style={styles.statValue}>{formatNum(gold)}</span>
-          <span style={styles.statGps}>{gps > 0 ? `+${formatNum(gps)}/ث` : " E}</span>
+          <span style={styles.statGps}>{gps > 0 ? `+${formatNum(gps)}/ث` : "—"}</span>
         </div>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 20, fontWeight: 900, color: "#d4a853" }}>🏰 فE�E�E�E�فE/div>
-          {boosted && <div style={{ fontSize: 11, color: "#7c3aed", fontWeight: 700 }}>⚡ تعزيز فE�ط ({boostLeft}ث)</div>}
+          <div style={{ fontSize: 20, fontWeight: 900, color: "#ec4899" }}>🏰 مملكتي</div>
+          {boosted && <div style={{ fontSize: 11, color: "#7c3aed", fontWeight: 700 }}>⚡ تعزيز نشط ({boostLeft}ث)</div>}
         </div>
         <div style={styles.statBox}>
-          <span style={styles.statLabel}>💎 جوافE�</span>
+          <span style={styles.statLabel}>💎 جواهر</span>
           <span style={{ ...styles.statValue, color: "#a78bfa" }}>{formatNum(gems)}</span>
-          <span style={{ ...styles.statGps, color: "#f472b6" }}>فE�درة</span>
+          <span style={{ ...styles.statGps, color: "#f472b6" }}>نادرة</span>
         </div>
       </div>
 
@@ -492,7 +492,7 @@ export default function GamePage() {
         <div style={styles.mainArea}>
           {/* Click button */}
           <div style={{ position: "relative" }}>
-            <button onClick={handleClick} style={styles.coinBtn}>🪁E/button>
+            <button onClick={handleClick} style={styles.coinBtn}>🪙</button>
             {/* Floating numbers */}
             {floats.map(f => (
               <div key={f.id} style={{
@@ -509,28 +509,28 @@ export default function GamePage() {
             ))}
           </div>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 13, color: "#f9a8d4", fontWeight: 700 }}>افE�ر فE�فE�ب افE�فE�</div>
-            <div style={{ fontSize: 12, color: "#888" }}>+{clickPower * (boosted ? 2 : 1)} 💰 فE�E�EفE�رة</div>
+            <div style={{ fontSize: 13, color: "#a855f7", fontWeight: 700 }}>انقر لتكسب الذهب</div>
+            <div style={{ fontSize: 12, color: "#888" }}>+{clickPower * (boosted ? 2 : 1)} 💰 لكل نقرة</div>
           </div>
 
           {boosted && (
             <div style={styles.boostBadge}>
-              ⚡ تعزيز 2ÁEفE�ط  E{boostLeft} ثافE�ة
+              ⚡ تعزيز 2× نشط — {boostLeft} ثانية
             </div>
           )}
 
           {/* Ad section */}
           <div style={styles.adSection}>
-            <div style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>شافE� إعفE�فE�فEواحصفEعفE�EفE�E�فE�ة فE�رية!</div>
+            <div style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>شاهد إعلاناً واحصل على مكافأة فورية!</div>
             <button
               onClick={startAd}
               disabled={adCooldown > 0}
               style={styles.adBtn(adCooldown > 0)}
             >
-              {adCooldown > 0 ? `⏳ افE�ظر ${adCooldown}ث` : "📺 شافE� إعفE�فEↁEفE�E�فE�ة"}
+              {adCooldown > 0 ? `⏳ انتظر ${adCooldown}ث` : "📺 شاهد إعلان → مكافأة"}
             </button>
             <div style={{ fontSize: 11, color: "#666" }}>
-              افE�E�E�فE�ت: 💰 ذفE� · 💎 جوافE� · ⚡ تعزيز 2ÁE
+              المكافآت: 💰 ذهب · 💎 جواهر · ⚡ تعزيز 2×
             </div>
           </div>
         </div>
@@ -538,8 +538,8 @@ export default function GamePage() {
 
       {tab === "buildings" && (
         <div style={styles.listArea}>
-          <div style={{ fontSize: 13, color: "#f9a8d4", fontWeight: 700, marginBottom: 4 }}>
-            اشترفEفE�افE�فEفE�وفE�د افE�فE� تفE�ائيافE
+          <div style={{ fontSize: 13, color: "#a855f7", fontWeight: 700, marginBottom: 4 }}>
+            اشترِ مبانيَ لتوليد الذهب تلقائياً
           </div>
           {BUILDING_DEFS.map(def => {
             const owned = buildings[def.id] || 0;
@@ -555,12 +555,12 @@ export default function GamePage() {
                   <div style={styles.cardName}>{def.name}</div>
                   <div style={styles.cardDesc}>{def.description}</div>
                   <div style={{ fontSize: 11, color: "#6ee7b7", marginTop: 2 }}>
-                    إفE�اج: {def.baseIncome * owned > 0 ? `${formatNum(def.baseIncome * owned * (upgrades[`${def.id}2`] ? 2 : 1) * (upgrades["all2"] ? 2 : 1))}/ث` : " E}
+                    إنتاج: {def.baseIncome * owned > 0 ? `${formatNum(def.baseIncome * owned * (upgrades[`${def.id}2`] ? 2 : 1) * (upgrades["all2"] ? 2 : 1))}/ث` : "—"}
                   </div>
                 </div>
                 <div>
                   <div style={styles.cardCost(canAfford)}>{formatNum(cost)} 💰</div>
-                  <div style={styles.cardCount}>فE�E�E�فE {owned}</div>
+                  <div style={styles.cardCount}>مملوك: {owned}</div>
                 </div>
               </div>
             );
@@ -570,8 +570,8 @@ export default function GamePage() {
 
       {tab === "upgrades" && (
         <div style={styles.listArea}>
-          <div style={{ fontSize: 13, color: "#f9a8d4", fontWeight: 700, marginBottom: 4 }}>
-            ترقيات دائفE� تحسّفEإفE�اجفE
+          <div style={{ fontSize: 13, color: "#a855f7", fontWeight: 700, marginBottom: 4 }}>
+            ترقيات دائمة تحسّن إنتاجك
           </div>
           {UPGRADE_DEFS.map(def => {
             const purchased = !!upgrades[def.id];
@@ -591,12 +591,12 @@ export default function GamePage() {
                 }}
               >
                 <div style={{ fontSize: 32, minWidth: 40, textAlign: "center" }}>
-                  {purchased ? "✁E : locked ? "🔒" : "⬁E��E}
+                  {purchased ? "✅" : locked ? "🔒" : "⬆️"}
                 </div>
                 <div style={styles.cardInfo}>
                   <div style={styles.cardName}>{def.name}</div>
                   <div style={styles.cardDesc}>{def.description}</div>
-                  {locked && <div style={{ fontSize: 11, color: "#f87171" }}>فE�فE�E EاشترفEافE�رقية افE�ابقة أوفE�فE/div>}
+                  {locked && <div style={{ fontSize: 11, color: "#f87171" }}>مقفل — اشترِ الترقية السابقة أولاً</div>}
                 </div>
                 {!purchased && (
                   <div style={{ textAlign: "right" }}>
@@ -608,7 +608,7 @@ export default function GamePage() {
                     )}
                   </div>
                 )}
-                {purchased && <div style={{ color: "#f9a8d4", fontWeight: 700, fontSize: 12 }}>فE�E�فE�E/div>}
+                {purchased && <div style={{ color: "#a855f7", fontWeight: 700, fontSize: 12 }}>مكتمل</div>}
               </div>
             );
           })}
@@ -617,16 +617,16 @@ export default function GamePage() {
 
       {tab === "stats" && (
         <div style={styles.listArea}>
-          <div style={{ fontSize: 18, fontWeight: 900, color: "#d4a853", marginBottom: 8 }}>📊 إحصائياتفE/div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#ec4899", marginBottom: 8 }}>📊 إحصائياتك</div>
           {[
-            { label: "💰 إجفE�فE�EافE�فE� افE�E�E�سب", value: formatNum(totalGoldEarned) },
-            { label: "👆 عدد افE�E�رات", value: totalClicks.toLocaleString("ar") },
-            { label: "🏗�E�EافE�E�افE�EافE�E�E�E�فE�", value: Object.values(buildings).reduce((a: number, b: number) => a + b, 0).toString() },
-            { label: "⬁E��EافE�رقيات افE�E�تراة", value: Object.values(upgrades).filter(Boolean).length.toString() },
-            { label: "📺 افE�عفE�فE�ت افE�E�افE�ة", value: adsWatched.toString() },
-            { label: "⚡ افE�فE�اج افE�افE�Eث", value: `${formatNum(gps)} ذفE�` },
-            { label: "👆 قوة افE�E�رة", value: `+${clickPower * (boosted ? 2 : 1)} ذفE�` },
-            { label: "💎 افE�وافE� افE�E�بقية", value: formatNum(gems) },
+            { label: "💰 إجمالي الذهب المكتسب", value: formatNum(totalGoldEarned) },
+            { label: "👆 عدد النقرات", value: totalClicks.toLocaleString("ar") },
+            { label: "🏗️ المباني المملوكة", value: Object.values(buildings).reduce((a: number, b: number) => a + b, 0).toString() },
+            { label: "⬆️ الترقيات المشتراة", value: Object.values(upgrades).filter(Boolean).length.toString() },
+            { label: "📺 الإعلانات المشاهدة", value: adsWatched.toString() },
+            { label: "⚡ الإنتاج الحالي/ث", value: `${formatNum(gps)} ذهب` },
+            { label: "👆 قوة النقرة", value: `+${clickPower * (boosted ? 2 : 1)} ذهب` },
+            { label: "💎 الجواهر المتبقية", value: formatNum(gems) },
           ].map(row => (
             <div key={row.label} style={{
               background: "rgba(255,255,255,0.05)",
@@ -643,7 +643,7 @@ export default function GamePage() {
           ))}
           <button
             onClick={() => {
-              if (confirm("فE�EأفE� فE�أفE� فE�Eإعادة افE�بط؁EسيتفEحذفEفE�EتقدفE�E")) {
+              if (confirm("هل أنت متأكد من إعادة الضبط؟ سيتم حذف كل تقدمك!")) {
                 localStorage.removeItem(SAVE_KEY);
                 window.location.reload();
               }
@@ -661,7 +661,7 @@ export default function GamePage() {
               width: "100%",
             }}
           >
-            🔄 إعادة افE�بط
+            🔄 إعادة الضبط
           </button>
         </div>
       )}
@@ -676,16 +676,16 @@ export default function GamePage() {
         ))}
       </div>
 
-      {/* Ad modal  Ewatching phase */}
+      {/* Ad modal — watching phase */}
       {adPhase === "watching" && (
         <div style={styles.overlay}>
           <div style={styles.modal}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>📺</div>
             <div style={{ fontSize: 20, fontWeight: 900, color: "#fff", marginBottom: 8 }}>
-              جارفEتشغيفEافE�عفE�فE..
+              جاري تشغيل الإعلان...
             </div>
             <div style={{ fontSize: 14, color: "#aaa", marginBottom: 24 }}>
-              شافE� افE�عفE�فEفE�فE�E�فEفE�حصفEعفE�EفE�E�فE�تفE
+              شاهد الإعلان كاملاً لتحصل على مكافأتك
             </div>
             {/* Progress bar */}
             <div style={{
@@ -698,7 +698,7 @@ export default function GamePage() {
               <div style={{
                 width: `${adProgress}%`,
                 height: "100%",
-                background: "linear-gradient(90deg,#7c3aed,#d4a853)",
+                background: "linear-gradient(90deg,#7c3aed,#ec4899)",
                 borderRadius: 999,
                 transition: "width 0.1s linear",
               }} />
@@ -713,29 +713,29 @@ export default function GamePage() {
             }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>🚀</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#a78bfa" }}>
-                واصفE�E EافE�طبيفEافE�وفEفE�E�يع وافE�راء
+                واصلي — التطبيق الأول للبيع والشراء
               </div>
               <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>
-                آفE�فEافE�E�E�جات بيفEيديفE
+                آلاف المنتجات بين يديك
               </div>
             </div>
             <div style={{ fontSize: 12, color: "#666" }}>
-              {Math.ceil(AD_WATCH_SEC - (adProgress / 100) * AD_WATCH_SEC)} ثافE�ة فE�بقية...
+              {Math.ceil(AD_WATCH_SEC - (adProgress / 100) * AD_WATCH_SEC)} ثانية متبقية...
             </div>
           </div>
         </div>
       )}
 
-      {/* Ad modal  Ereward phase */}
+      {/* Ad modal — reward phase */}
       {adPhase === "reward" && (
         <div style={styles.overlay}>
           <div style={styles.modal}>
             <div style={{ fontSize: 60, marginBottom: 16 }}>🎉</div>
             <div style={{ fontSize: 22, fontWeight: 900, color: "#fbbf24", marginBottom: 8 }}>
-              فE�روفE
+              مبروك!
             </div>
             <div style={{ fontSize: 15, color: "#ddd", marginBottom: 24 }}>
-              فE�د ربحت:
+              لقد ربحت:
             </div>
             <div style={{
               background: "linear-gradient(135deg,rgba(124,58,237,0.3),rgba(236,72,153,0.3))",
@@ -751,24 +751,24 @@ export default function GamePage() {
             </div>
             {currentReward.gold > 0 && (
               <div style={{ fontSize: 14, color: "#fbbf24", marginBottom: 4 }}>
-                💰 +{currentReward.gold} ذفE�
+                💰 +{currentReward.gold} ذهب
               </div>
             )}
             {currentReward.gems > 0 && (
               <div style={{ fontSize: 14, color: "#a78bfa", marginBottom: 4 }}>
-                💎 +{currentReward.gems} جوفE�ة
+                💎 +{currentReward.gems} جوهرة
               </div>
             )}
             {currentReward.type === "boost" && (
               <div style={{ fontSize: 14, color: "#6ee7b7", marginBottom: 4 }}>
-                ⚡ تعزيز 2ÁEفE�E�ة {BOOST_DURATION_SEC} ثافE�ة
+                ⚡ تعزيز 2× لمدة {BOOST_DURATION_SEC} ثانية
               </div>
             )}
             <button
               onClick={claimReward}
               style={{
                 marginTop: 16,
-                background: "linear-gradient(135deg,#7c3aed,#d4a853)",
+                background: "linear-gradient(135deg,#7c3aed,#ec4899)",
                 border: "none",
                 borderRadius: 16,
                 color: "#fff",
@@ -780,7 +780,7 @@ export default function GamePage() {
                 boxShadow: "0 4px 20px rgba(236,72,153,0.4)",
               }}
             >
-              استفE�فEافE�E�E�فE�ة ✨
+              استلام المكافأة ✨
             </button>
           </div>
         </div>
@@ -801,4 +801,3 @@ export default function GamePage() {
     </div>
   );
 }
-
