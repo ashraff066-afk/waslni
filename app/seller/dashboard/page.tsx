@@ -666,7 +666,7 @@ if (seller?.payment_status === "pending") return (
           <img src={a.image_url} alt="" style={{ width: "100%", height: 140, objectFit: "cover" }} />
           <button onClick={async () => {
             await supabase.from("ads").update({ is_active: false }).eq("id", a.id);
-            checkUser();
+            loadAds(seller.id);
           }} style={{ position: "absolute", top: 8, left: 8, background: "#ef444488", border: "none", borderRadius: 8, padding: "4px 10px", color: "#fff", fontSize: 12, cursor: "pointer", fontFamily: "Tajawal,sans-serif", fontWeight: 700 }}>حذف</button>
         </div>
       ))}
