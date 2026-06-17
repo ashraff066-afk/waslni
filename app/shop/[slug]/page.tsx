@@ -191,6 +191,8 @@ export default function ShopPage() {
   const [orderNumber, setOrderNumber] = useState("");
 const [searchProduct, setSearchProduct] = useState("");
 const [bundles, setBundles] = useState<any[]>([]);
+const [firstOrderGift, setFirstOrderGift] = useState<string | null>(null);
+const [isFirstOrder, setIsFirstOrder] = useState(false);
 const [loyaltyPoints, setLoyaltyPoints] = useState(0);
 const [usingPoints, setUsingPoints] = useState(false);
 const [discountCode, setDiscountCode] = useState("");
@@ -235,6 +237,8 @@ const FREE_SHIPPING_THRESHOLD = 30;// 10,000 دينار
 setProducts(prodsData || []);
 const { data: bundlesData } = await supabase.from("bundles").select("*").eq("seller_id", data[0].id).eq("is_active", true);
 setBundles(bundlesData || []);
+const { data: giftData } = await supabase.from("first_order_gifts").select("*").eq("seller_id", data[0].id).eq("is_active", true).limit(1);
+if (giftData && giftData.length > 0) setFirstOrderGift(giftData[0].gift_description);
     setLoading(false);
   };
  
@@ -532,11 +536,16 @@ setUsingPoints(false);
   </div>
 )}
 
-      {total >= SPINNER_THRESHOLD && (
-        <div style={{ margin: "12px 16px 0", background: "#ec489915", border: "1px solid #ec489944", borderRadius: 12, padding: "10px 14px", fontSize: 12, color: "#ec4899", fontWeight: 700, textAlign: "center" }}>
-          🎰 مبروك! طلبك يؤهلك لفرارة الحظ عند التأكيد!
-        </div>
-      )}
+     {total >= SPINNER_THRESHOLD && (
+  <div style={{ margin: "12px 16px 0", background: "#ec489915", border: "1px solid #ec489944", borderRadius: 12, padding: "10px 14px", fontSize: 12, color: "#ec4899", fontWeight: 700, textAlign: "center" }}>
+    🎰 مبروك! طلبك يؤهلك لفرارة الحظ عند التأكيد!
+  </div>
+)}
+{isFirstOrder && firstOrderGift && (
+  <div style={{ margin: "12px 16px 0", background: "#00d4aa15", border: "1px solid #00d4aa44", borderRadius: 12, padding: "10px 14px", fontSize: 12, color: "#00d4aa", fontWeight: 700, textAlign: "center" }}>
+    🎁 مبروك! هذا أول طلب لك — ستحصل على: {firstOrderGift}
+  </div>
+)}
  
       {/* فلتر الفئات */}
       <div style={{ display: "flex", gap: 8, overflowX: "auto", padding: "16px 16px 8px", scrollbarWidth: "none" }}>
@@ -683,7 +692,14 @@ setUsingPoints(false);
 </div>
                   <h4 style={{ color: "#fff", fontWeight: 700, marginBottom: 12, fontSize: 14 }}>📋 بيانات التوصيل</h4>
                   <input type="text" placeholder="اسمك الكامل" value={customerName} onChange={e => setCustomerName(e.target.value)} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
-                  <input type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone} onChange={e => { setCustomerPhone(e.target.value); if (e.target.value.replace(/\s/g, '').length === 11) loadLoyaltyPoints(e.target.value); }}style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
+                  <input type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone} onChange={async (e) => {
+  setCustomerPhone(e.target.value);
+  if (e.target.value.replace(/\s/g, '').length === 11) {
+    loadLoyaltyPoints(e.target.value);
+    const { data } = await supabase.from("orders").select("id").eq("seller_id", seller.id).eq("customer_phone", e.target.value).limit(1);
+    setIsFirstOrder(!data || data.length === 0);
+  }
+}}style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", marginBottom: 10 }} />
                   <textarea placeholder="عنوان التوصيل بالتفصيل..." value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} rows={2} style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif", resize: "none", marginBottom: 14 }} />
                   <button onClick={placeOrder} disabled={ordering} style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 14, fontSize: 16, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
                     {ordering ? "جاري الطلب..." : total >= SPINNER_THRESHOLD ? "🎰 تأكيد الطلب وافرّ الفرارة!" : "✅ تأكيد الطلب"}

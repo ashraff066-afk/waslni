@@ -304,6 +304,7 @@ if (seller?.payment_status === "pending") return (
 { id: "discounts", label: "🎟️ الخصومات" },
 { id: "bundles", label: "🎁 الباقات" },
 { id: "ads", label: "📢 الإعلانات" },
+{ id: "gift", label: "🎁 هدية أول طلب" },
         ].map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)} style={{ padding: "9px 18px", borderRadius: 12, cursor: "pointer", fontSize: 13, fontFamily: "Tajawal,sans-serif", fontWeight: 700, background: activeTab === t.id ? "linear-gradient(135deg,#ec4899,#a855f7)" : "#ffffff10", color: activeTab === t.id ? "#fff" : "#ffffff80", border: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{t.label}</button>
         ))}
@@ -671,6 +672,25 @@ if (seller?.payment_status === "pending") return (
         </div>
       ))}
     </div>
+  </div>
+)}
+{/* GIFT */}
+{activeTab === "gift" && (
+  <div style={{ background: "#ffffff10", borderRadius: 20, padding: 20, border: "1px solid #ffffff15" }}>
+    <h3 style={{ fontWeight: 800, color: "#fff", marginBottom: 16, fontSize: 15 }}>🎁 هدية أول طلب</h3>
+    <p style={{ fontSize: 13, color: "#ffffff60", marginBottom: 16, lineHeight: 1.7 }}>هذه الهدية تُضاف تلقائياً مع أول طلب لكل زبون جديد</p>
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: "block", fontSize: 13, color: "#ffffff80", marginBottom: 6, fontWeight: 600 }}>وصف الهدية</label>
+      <input type="text" placeholder="مثال: عينة كريم مجانية" id="giftDesc" style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#ffffff15", border: "1px solid #ffffff20", color: "#fff", fontSize: 14, outline: "none", fontFamily: "Tajawal,sans-serif" }} />
+    </div>
+    <button onClick={async () => {
+      const desc = (document.getElementById("giftDesc") as HTMLInputElement)?.value;
+      if (!desc) { alert("أدخل وصف الهدية"); return; }
+      await supabase.from("first_order_gifts").upsert([{ seller_id: seller.id, gift_description: desc, is_active: true }], { onConflict: "seller_id" });
+      alert("✅ تم حفظ الهدية!");
+    }} style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg,#ec4899,#a855f7)", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 800, cursor: "pointer", color: "#fff", fontFamily: "Tajawal,sans-serif" }}>
+      💾 حفظ الهدية
+    </button>
   </div>
 )}
 {/* MODAL تعديل المنتج */}
